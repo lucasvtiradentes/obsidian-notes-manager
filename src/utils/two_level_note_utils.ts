@@ -88,13 +88,19 @@ export class TwoLevelNote {
           markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item.theme}</td>\n`;
           currentTheme = item.theme;
           currentTopic = '';
+        } else {
+          markdown += `  <tr>\n`;
+          markdown += `    <!-- <td>${item.theme}</td> -->\n`;
         }
 
         if (item.topic !== currentTopic) {
           const countRows = jsonData.filter((it) => it.theme === item.theme && it.topic === item.topic).length;
           markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item.topic}</td>\n`;
           currentTopic = item.topic;
+        } else {
+          markdown += `    <!-- <td>${item.topic}</td> -->\n`;
         }
+
         markdown += `    <td><a href="${item.link}">${item.title}</a></td>\n`;
         markdown += `  </tr>\n`;
       }

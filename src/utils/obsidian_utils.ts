@@ -33,15 +33,10 @@ export function getNoteType(obsidianPlugin: Plugin, fileType: TFileType): TNoteT
     noteType = maxLevel === 1 ? NOTE_TYPE_ENUM.ONE_LEVEL : maxLevel === 2 ? NOTE_TYPE_ENUM.TWO_LEVEL : NOTE_TYPE_ENUM._;
   } else if (fileType === FILE_TYPE_ENUM.JSON) {
     const jsonData = JSON.parse(content) as Record<string, string>[];
-    console.log(jsonData);
-
     if (jsonData.every((item) => Object.keys(item).length === 3)) return NOTE_TYPE_ENUM.ONE_LEVEL;
     if (jsonData.every((item) => Object.keys(item).length === 4)) return NOTE_TYPE_ENUM.TWO_LEVEL;
   } else if (fileType === FILE_TYPE_ENUM.TABLE) {
     const jsonData = markdownTableToJson({ mdContent: content });
-
-    console.log(jsonData);
-
     if (jsonData.every((item) => Object.keys(item).length === 2)) return NOTE_TYPE_ENUM.ONE_LEVEL;
     if (jsonData.every((item) => Object.keys(item).length === 3)) return NOTE_TYPE_ENUM.TWO_LEVEL;
   }
