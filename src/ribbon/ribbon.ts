@@ -1,13 +1,13 @@
 import { Notice } from 'obsidian';
-import { CONSTANTS } from 'src/consts';
+import { CONFIGS } from 'src/consts';
 import NotesManager from 'src/main';
 
 export function addRibbonToObsidian() {
   const typedThis = this as NotesManager;
 
-  const ribbonIconEl = typedThis.addRibbonIcon(CONSTANTS.ribbon.icon, CONSTANTS.ribbon.title, () => {
+  const ribbonIconEl = typedThis.addRibbonIcon(CONFIGS.ribbon.icon, CONFIGS.ribbon.title, () => {
     new Notice('This is a notice!');
   });
 
-  ribbonIconEl.addClass(CONSTANTS.ribbon.class_name);
+  ribbonIconEl.addClass(CONFIGS.ribbon.class_name);
 }
