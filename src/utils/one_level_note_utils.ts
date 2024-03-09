@@ -6,22 +6,23 @@ import { TLevelNoteConfigs, TLinkInfo } from './note_utils';
 import { FILE_TYPE_ENUM } from './obsidian_utils';
 
 export type TOneLevelNote = Omit<TLinkInfo, 'topic'>;
-type TOneLevelNoteConfigs = TLevelNoteConfigs<TOneLevelNote>;
+export type TOneLevelNoteConfigs = TLevelNoteConfigs<TOneLevelNote>;
 
 export class OneLevelNote {
   constructor(private configs: TOneLevelNoteConfigs) {}
 
   toJson(): TOneLevelNote[] {
     if (this.configs.type === FILE_TYPE_ENUM.JSON) {
-      return this.configs.content as TOneLevelNote[];
+      return this.configs.content;
     } else if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
-      const toc = generateTOC(this.configs.content as string);
+      const typedContent = this.configs.content;
+      const toc = generateTOC(typedContent);
       const linksPerSection = Array.from(toc.keys()).map((index) => {
         const indexInfo = toc.get(index)!;
         return {
           section: indexInfo.title,
           level: indexInfo.level,
-          links: extractMarkdownLinks(getSectionContentByIndex(this.configs.content as string, index))
+          links: extractMarkdownLinks(getSectionContentByIndex(typedContent, index))
         };
       });
 
@@ -32,7 +33,7 @@ export class OneLevelNote {
 
       return reducedLinks;
     } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
-      const jsonData = markdownTableToJson({ mdContent: this.configs.content as string });
+      const jsonData = markdownTableToJson({ mdContent: this.configs.content });
       const [themeKey, linkKey] = Object.keys(jsonData[0]);
       const result: TOneLevelNote[] = jsonData.map((item) => {
         const { label, link } = extractLinkInfo(item[linkKey]);
@@ -87,7 +88,7 @@ export class OneLevelNote {
     if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
       return this.configs.content;
     } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
-      const jsonData = this.toJson() as TOneLevelNote[];
+      const jsonData = this.toJson();
       const groupItems = groupObjectArrayByKey(jsonData, 'theme');
       const contentArr: string[] = [];
 
@@ -101,7 +102,7 @@ export class OneLevelNote {
 
       return contentArr.join('\n');
     } else if (this.configs.type === FILE_TYPE_ENUM.JSON) {
-      const groupItems = groupObjectArrayByKey(this.configs.content as TOneLevelNote[], 'theme');
+      const groupItems = groupObjectArrayByKey(this.configs.content, 'theme');
       const contentArr: string[] = [];
 
       for (const [group, items] of Object.entries(groupItems)) {

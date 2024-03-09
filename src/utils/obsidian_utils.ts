@@ -21,6 +21,7 @@ export function getFileType(file: TFile, obsidianPlugin: Plugin): TFileType {
     if (content.includes('<table>') && content.includes('</table>')) return FILE_TYPE_ENUM.TABLE;
     return FILE_TYPE_ENUM.MARKDOWN;
   }
+
   return FILE_TYPE_ENUM._;
 }
 

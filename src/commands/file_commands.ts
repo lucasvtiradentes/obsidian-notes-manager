@@ -1,8 +1,7 @@
-import { Notice } from 'obsidian';
-import NotesManager from 'src/main';
+import { Notice, Plugin } from 'obsidian';
 
 export function addFileCommandsToObsidian() {
-  const typedThis = this as NotesManager;
+  const typedThis = this as Plugin;
 
   typedThis.registerEvent(
     typedThis.app.workspace.on('file-menu', (menu, file) => {

@@ -1,8 +1,7 @@
-import { App, Editor, MarkdownView, Modal } from 'obsidian';
-import NotesManager from 'src/main';
+import { App, Editor, MarkdownView, Modal, Plugin } from 'obsidian';
 
 export function addPalletCommandsToObsidian() {
-  const typedThis = this as NotesManager;
+  const typedThis = this as Plugin;
 
   // This adds a simple command that can be triggered anywhere
   typedThis.addCommand({

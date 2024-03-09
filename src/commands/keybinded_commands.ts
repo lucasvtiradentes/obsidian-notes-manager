@@ -1,7 +1,7 @@
-import NotesManager from 'src/main';
+import { Plugin } from 'obsidian';
 
 export function addKeybindedCommandsToObsidian() {
-  const typedThis = this as NotesManager;
+  const typedThis = this as Plugin;
 
   typedThis.addCommand({
     id: 'example-command',

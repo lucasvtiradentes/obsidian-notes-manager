@@ -10,9 +10,9 @@ export type TLinkInfo = {
 export type TLevelNoteConfigs<TContent> =
   | {
       content: string;
-      type: typeof FILE_TYPE_ENUM.TABLE | typeof FILE_TYPE_ENUM.MARKDOWN;
+      type: (typeof FILE_TYPE_ENUM)['TABLE'] | (typeof FILE_TYPE_ENUM)['MARKDOWN'];
     }
   | {
       content: TContent[];
-      type: typeof FILE_TYPE_ENUM.JSON;
+      type: (typeof FILE_TYPE_ENUM)['JSON'];
     };

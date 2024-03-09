@@ -5,8 +5,8 @@ import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentBy
 import { TLevelNoteConfigs, TLinkInfo } from './note_utils';
 import { FILE_TYPE_ENUM } from './obsidian_utils';
 
-type TTwoLevelNote = TLinkInfo;
-type TTwoLevelNoteConfigs = TLevelNoteConfigs<TTwoLevelNote>;
+export type TTwoLevelNote = TLinkInfo;
+export type TTwoLevelNoteConfigs = TLevelNoteConfigs<TTwoLevelNote>;
 
 export class TwoLevelNote {
   constructor(private configs: TTwoLevelNoteConfigs) {}
@@ -27,7 +27,7 @@ export class TwoLevelNote {
       .filter((item) => item.level === 1)
       .map((item) => item.index);
 
-    const linksGroupedByTheme = [] as TTwoLevelNote[][];
+    const linksGroupedByTheme: TTwoLevelNote[][] = [];
     for (let x = 0; x < indexes.length; x++) {
       const currentIndex = indexes[x];
       const nextIndex = x + 1 === indexes.length ? linksPerSection.length : indexes[x + 1];
@@ -43,13 +43,13 @@ export class TwoLevelNote {
 
   toJson(): TTwoLevelNote[] {
     if (this.configs.type === FILE_TYPE_ENUM.JSON) {
-      return this.configs.content as TLinkInfo[];
+      return this.configs.content;
     } else if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
-      const linksGroupedByTheme = this.getLinksGroupedByTheme(this.configs.content as string);
+      const linksGroupedByTheme = this.getLinksGroupedByTheme(this.configs.content);
       const finalContent = mergeArraysOfArrays(linksGroupedByTheme);
       return finalContent;
     } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
-      const jsonData = markdownTableToJson({ mdContent: this.configs.content as string });
+      const jsonData = markdownTableToJson({ mdContent: this.configs.content });
       const [themeKey, topicKey, linkKey] = Object.keys(jsonData[0]);
       const result: TTwoLevelNote[] = jsonData.map((item) => {
         const { label, link } = extractLinkInfo(item[linkKey]);
@@ -116,7 +116,7 @@ export class TwoLevelNote {
     if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
       return this.configs.content;
     } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
-      const jsonData = this.toJson() as TTwoLevelNote[];
+      const jsonData = this.toJson();
       const linksGroupedByTheme = groupObjectArrayByKey(jsonData, 'theme');
 
       const contentArr: string[] = [];
@@ -143,7 +143,7 @@ export class TwoLevelNote {
 
       return contentArr.join('\n');
     } else if (this.configs.type === FILE_TYPE_ENUM.JSON) {
-      const linksGroupedByTheme = groupObjectArrayByKey(this.configs.content as TLinkInfo[], 'theme');
+      const linksGroupedByTheme = groupObjectArrayByKey(this.configs.content, 'theme');
 
       const contentArr: string[] = [];
 

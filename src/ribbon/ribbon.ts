@@ -1,9 +1,8 @@
-import { Notice } from 'obsidian';
+import { Notice, Plugin } from 'obsidian';
 import { CONFIGS } from 'src/consts';
-import NotesManager from 'src/main';
 
 export function addRibbonToObsidian() {
-  const typedThis = this as NotesManager;
+  const typedThis = this as Plugin;
 
   const ribbonIconEl = typedThis.addRibbonIcon(CONFIGS.ribbon.icon, CONFIGS.ribbon.title, () => {
     new Notice('This is a notice!');
