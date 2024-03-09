@@ -1,6 +1,6 @@
 import { Notice, Plugin } from 'obsidian';
 import NotesManager from 'src/main';
-import { FILE_TYPE_ENUM, TFileType, getCurrentEditedNoteContent, getFileType, getNoteType, updateCurrentNoteContent } from 'src/utils/obsidian_utils';
+import { FILE_TYPE_ENUM, TFileType, checkFileExistence, getCurrentEditedNoteContent, getFileType, getNoteType, updateCurrentNoteContent, updateCurrentNoteExtension } from 'src/utils/obsidian_utils';
 import { OneLevelNote, TOneLevelNote } from 'src/utils/one_level_note_utils';
 import { TwoLevelNote } from 'src/utils/two_level_note_utils';
 
@@ -60,15 +60,33 @@ export async function convertNoteToTable({ fileType, typedThis }: TCommandAction
   const fileContent = fileType === 'JSON' ? JSON.parse(originalFileContent) : originalFileContent;
   const noteType = getNoteType(typedThis, fileType);
 
-  console.log({ fileType, noteType });
-
   if (noteType === 'ONE_LEVEL') {
+    const activeFile = typedThis.app.workspace.getActiveFile()!;
+    const destinationExtension = 'md';
+    const destinationFile = activeFile.path.replace(activeFile.extension, destinationExtension);
+    const destinationFileExists = checkFileExistence({ typedThis, filePath: destinationFile });
+    if (activeFile.extension !== destinationExtension && destinationFileExists) {
+      new Notice('File already exists!');
+      return;
+    }
+
     const newContent = new OneLevelNote({ content: fileContent, type: fileType }).toTable();
     updateCurrentNoteContent({ newContent, typedThis });
+    updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
   } else if (noteType === 'TWO_LEVEL') {
+    const activeFile = typedThis.app.workspace.getActiveFile()!;
+    const destinationExtension = 'md';
+    const destinationFile = activeFile.path.replace(activeFile.extension, destinationExtension);
+    const destinationFileExists = checkFileExistence({ typedThis, filePath: destinationFile });
+    if (activeFile.extension !== destinationExtension && destinationFileExists) {
+      new Notice('File already exists!');
+      return;
+    }
+
     const newContent = new TwoLevelNote({ content: fileContent, type: fileType }).toTable();
     updateCurrentNoteContent({ newContent, typedThis });
+    updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
   }
 
@@ -80,15 +98,33 @@ export async function convertNoteToJSON({ fileType, typedThis }: TCommandAction)
   const fileContent = fileType === 'JSON' ? (JSON.parse(originalFileContent) as TOneLevelNote[]) : originalFileContent;
   const noteType = getNoteType(typedThis, fileType);
 
-  console.log({ fileType, noteType });
-
   if (noteType === 'ONE_LEVEL') {
+    const activeFile = typedThis.app.workspace.getActiveFile()!;
+    const destinationExtension = 'json';
+    const destinationFile = activeFile.path.replace(activeFile.extension, destinationExtension);
+    const destinationFileExists = checkFileExistence({ typedThis, filePath: destinationFile });
+    if (activeFile.extension !== destinationExtension && destinationFileExists) {
+      new Notice('File already exists!');
+      return;
+    }
+
     const newContent = new OneLevelNote({ content: fileContent as string, type: fileType }).toJson();
     updateCurrentNoteContent({ newContent: JSON.stringify(newContent, null, 2), typedThis });
+    updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
   } else if (noteType === 'TWO_LEVEL') {
+    const activeFile = typedThis.app.workspace.getActiveFile()!;
+    const destinationExtension = 'json';
+    const destinationFile = activeFile.path.replace(activeFile.extension, destinationExtension);
+    const destinationFileExists = checkFileExistence({ typedThis, filePath: destinationFile });
+    if (activeFile.extension !== destinationExtension && destinationFileExists) {
+      new Notice('File already exists!');
+      return;
+    }
+
     const newContent = new TwoLevelNote({ content: fileContent as string, type: fileType }).toJson();
     updateCurrentNoteContent({ newContent: JSON.stringify(newContent, null, 2), typedThis });
+    updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
   }
 
@@ -100,22 +136,35 @@ export async function convertNoteToMarkdown({ fileType, typedThis }: TCommandAct
   const fileContent = fileType === 'JSON' ? (JSON.parse(originalFileContent) as TOneLevelNote[]) : originalFileContent;
   const noteType = getNoteType(typedThis, fileType);
 
-  console.log({ fileType, noteType });
-
   if (noteType === 'ONE_LEVEL') {
+    const activeFile = typedThis.app.workspace.getActiveFile()!;
+    const destinationExtension = 'md';
+    const destinationFile = activeFile.path.replace(activeFile.extension, destinationExtension);
+    const destinationFileExists = checkFileExistence({ typedThis, filePath: destinationFile });
+    if (activeFile.extension !== destinationExtension && destinationFileExists) {
+      new Notice('File already exists!');
+      return;
+    }
+
     const newContent = new OneLevelNote({ content: fileContent as string, type: fileType }).toMarkdown();
     updateCurrentNoteContent({ newContent: newContent as string, typedThis });
+    updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
   } else if (noteType === 'TWO_LEVEL') {
+    const activeFile = typedThis.app.workspace.getActiveFile()!;
+    const destinationExtension = 'md';
+    const destinationFile = activeFile.path.replace(activeFile.extension, destinationExtension);
+    const destinationFileExists = checkFileExistence({ typedThis, filePath: destinationFile });
+    if (activeFile.extension !== destinationExtension && destinationFileExists) {
+      new Notice('File already exists!');
+      return;
+    }
+
     const newContent = new TwoLevelNote({ content: fileContent as string, type: fileType }).toMarkdown();
     updateCurrentNoteContent({ newContent: newContent as string, typedThis });
+    updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
   }
 
   new Notice('file not supported!');
 }
-
-// async () => {
-//   new Notice('convert to JSON!');
-//   // typedThis.app.fileManager.renameFile(noteFile, noteFile.basename + '.txt');
-// }

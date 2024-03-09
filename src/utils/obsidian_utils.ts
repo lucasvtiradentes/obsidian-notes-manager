@@ -1,4 +1,5 @@
 import { Plugin, TFile } from 'obsidian';
+import { TAbstractFile } from 'obsidian';
 import { constArrayToEnumObject } from 'src/utils/array_utils';
 
 import { generateTOC, markdownTableToJson } from './markdown_utils';
@@ -42,6 +43,17 @@ export function getNoteType(obsidianPlugin: Plugin, fileType: TFileType): TNoteT
   }
 
   return noteType;
+}
+
+export function checkFileExistence(props: { typedThis: Plugin; filePath: string }): boolean {
+  const file: TAbstractFile | null = props.typedThis.app.vault.getAbstractFileByPath(props.filePath);
+  return file !== null;
+}
+
+export async function updateCurrentNoteExtension(props: { typedThis: Plugin; newExtension: string }) {
+  const file = props.typedThis.app.workspace.getActiveFile()!;
+  const newPath = file.path.replace(file.extension, props.newExtension);
+  await props.typedThis.app.vault.rename(file, newPath);
 }
 
 export function updateCurrentNoteContent(props: { typedThis: Plugin; newContent: string }) {

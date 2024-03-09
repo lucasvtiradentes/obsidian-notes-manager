@@ -2,9 +2,6 @@
 
 [ ] gerar TOC de todos os arquivos/pastas
 [ ] gerar TOC do arquivo
-[ ] converter para JSON
-[ ] converter para table
-[ ] converter para markdown
 
 # TODO ONE LEVEL
 
@@ -31,4 +28,4 @@
 
 # TODO
 
-[ ] mudar extensao entre MD e JSON
+[x] mudar extensao entre MD e JSON
