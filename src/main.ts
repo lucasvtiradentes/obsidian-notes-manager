@@ -1,6 +1,9 @@
 import { Plugin } from 'obsidian';
 
-import { addCommandsToObsidian } from './commands/commands';
+import { addEditorCommandsToObsidian } from './commands/editor_commands';
+import { addFileCommandsToObsidian } from './commands/file_commands';
+import { addKeybindedCommandsToObsidian } from './commands/keybinded_commands';
+import { addPalletCommandsToObsidian } from './commands/pallet_commands';
 import { CONSTANTS } from './consts';
 import { addRibbonToObsidian } from './ribbon/ribbon';
 import { TPluginSettings, addSettingsToObsidian } from './settings/settings';
@@ -10,9 +13,13 @@ export default class NotesManager extends Plugin {
 
   async onload() {
     await this.loadSettings();
-    addRibbonToObsidian.call(this);
-    addCommandsToObsidian.call(this);
     addSettingsToObsidian.call(this);
+    addRibbonToObsidian.call(this);
+
+    addKeybindedCommandsToObsidian.call(this);
+    addPalletCommandsToObsidian.call(this);
+    addFileCommandsToObsidian.call(this);
+    addEditorCommandsToObsidian.call(this);
   }
 
   onunload() {}

@@ -27,6 +27,10 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     const { containerEl } = this;
     containerEl.empty();
 
+    const book = containerEl.createEl('div', { cls: 'book' });
+    book.createEl('div', { text: 'How to Take Smart Notes', cls: 'book__title' });
+    book.createEl('small', { text: 'Sönke Ahrens', cls: 'book__author' });
+
     new Setting(containerEl)
       .setName('Setting #1')
       .setDesc("It's a secret")

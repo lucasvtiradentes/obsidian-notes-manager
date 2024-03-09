@@ -1,7 +1,7 @@
 import { App, Editor, MarkdownView, Modal } from 'obsidian';
 import NotesManager from 'src/main';
 
-export function addCommandsToObsidian() {
+export function addPalletCommandsToObsidian() {
   const typedThis = this as NotesManager;
 
   // This adds a simple command that can be triggered anywhere
@@ -40,6 +40,15 @@ export function addCommandsToObsidian() {
         // This command will only show up in Command Palette when the check function returns true
         return true;
       }
+    }
+  });
+
+  typedThis.addCommand({
+    id: 'example-command',
+    name: 'Example command',
+    hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'a' }],
+    callback: () => {
+      console.log('Hey, you!');
     }
   });
 }
