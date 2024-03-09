@@ -1,15 +1,13 @@
-import { Notice } from "obsidian";
+import { Notice } from 'obsidian';
+import { CONSTANTS } from 'src/consts';
+import NotesManager from 'src/main';
 
 export function addRibbonToObsidian() {
-  // This creates an icon in the left ribbon.
-  const ribbonIconEl = this.addRibbonIcon(
-    "dice",
-    "Sample Plugin",
-    (evt: MouseEvent) => {
-      new Notice("This is a notice!");
-      console.log(evt);
-    },
-  );
-  // Perform additional things with the ribbon
-  ribbonIconEl.addClass("my-plugin-ribbon-class");
+  const typedThis = this as NotesManager;
+
+  const ribbonIconEl = typedThis.addRibbonIcon(CONSTANTS.ribbon.icon, CONSTANTS.ribbon.title, () => {
+    new Notice('This is a notice!');
+  });
+
+  ribbonIconEl.addClass(CONSTANTS.ribbon.class_name);
 }

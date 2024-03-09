@@ -1,36 +1,24 @@
-import { Plugin } from "obsidian";
+import { Plugin } from 'obsidian';
 
-import { addCommandsToObsidian } from "./commands/commands";
-import { addRibbonToObsidian } from "./ribbon/ribbon";
-import {
-  DEFAULT_SETTINGS,
-  NotesManagerSettings,
-  TPluginSettings,
-} from "./settings/settings";
+import { addCommandsToObsidian } from './commands/commands';
+import { CONSTANTS } from './consts';
+import { addRibbonToObsidian } from './ribbon/ribbon';
+import { TPluginSettings, addSettingsToObsidian } from './settings/settings';
 
 export default class NotesManager extends Plugin {
   settings: TPluginSettings;
 
   async onload() {
     await this.loadSettings();
-
     addRibbonToObsidian.call(this);
     addCommandsToObsidian.call(this);
-    this.addSettingTab(new NotesManagerSettings(this.app, this));
-
-    this.registerDomEvent(document, "click", (evt: MouseEvent) => {
-      console.log("click", evt);
-    });
-
-    this.registerInterval(
-      window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000),
-    );
+    addSettingsToObsidian.call(this);
   }
 
   onunload() {}
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign({}, CONSTANTS.settings, await this.loadData());
   }
 
   async saveSettings() {
