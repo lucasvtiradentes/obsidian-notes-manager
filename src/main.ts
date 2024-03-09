@@ -20,6 +20,8 @@ export default class NotesManager extends Plugin {
     addKeybindedCommandsToObsidian.call(this);
     addFileCommandsToObsidian.call(this);
     addEditorCommandsToObsidian.call(this);
+
+    this.registerExtensions(['json'], 'markdown');
   }
 
   onunload() {}

@@ -1,3 +1,5 @@
+import { FILE_TYPE_ENUM } from './obsidian_utils';
+
 export type TLinkInfo = {
   title: string;
   link: string;
@@ -8,9 +10,9 @@ export type TLinkInfo = {
 export type TLevelNoteConfigs<TContent> =
   | {
       content: string;
-      type: 'table' | 'markdown';
+      type: typeof FILE_TYPE_ENUM.TABLE | typeof FILE_TYPE_ENUM.MARKDOWN;
     }
   | {
       content: TContent[];
-      type: 'json';
+      type: typeof FILE_TYPE_ENUM.JSON;
     };

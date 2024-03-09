@@ -3,6 +3,7 @@ import { CONFIGS } from 'src/consts';
 import { groupObjectArrayByKey, mergeArraysOfArrays } from './array_utils';
 import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentByIndex, markdownTableToJson } from './markdown_utils';
 import { TLevelNoteConfigs, TLinkInfo } from './note_utils';
+import { FILE_TYPE_ENUM } from './obsidian_utils';
 
 type TTwoLevelNote = TLinkInfo;
 type TTwoLevelNoteConfigs = TLevelNoteConfigs<TTwoLevelNote>;
@@ -41,14 +42,14 @@ export class TwoLevelNote {
   }
 
   toJson(): TTwoLevelNote[] {
-    if (this.configs.type === 'json') {
-      return this.configs.content;
-    } else if (this.configs.type === 'markdown') {
-      const linksGroupedByTheme = this.getLinksGroupedByTheme(this.configs.content);
+    if (this.configs.type === FILE_TYPE_ENUM.JSON) {
+      return this.configs.content as TLinkInfo[];
+    } else if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
+      const linksGroupedByTheme = this.getLinksGroupedByTheme(this.configs.content as string);
       const finalContent = mergeArraysOfArrays(linksGroupedByTheme);
       return finalContent;
-    } else if (this.configs.type === 'table') {
-      const jsonData = markdownTableToJson({ mdContent: this.configs.content });
+    } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
+      const jsonData = markdownTableToJson({ mdContent: this.configs.content as string });
       const [themeKey, topicKey, linkKey] = Object.keys(jsonData[0]);
       const result: TTwoLevelNote[] = jsonData.map((item) => {
         const { label, link } = extractLinkInfo(item[linkKey]);
@@ -67,11 +68,13 @@ export class TwoLevelNote {
 
   toTable() {
     const jsonData = this.toJson();
+
     const content = (() => {
+      const verticalAlignmentStyle = `style="vertical-align: middle;"`;
       let markdown = '<table>\n';
       markdown += '  <tr>\n';
-      markdown += `    <th style="vertical-align: middle;">${CONFIGS.constants.two_level_note.fist_column_name}</th>\n`;
-      markdown += `    <th style="vertical-align: middle;">${CONFIGS.constants.two_level_note.second_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${CONFIGS.constants.two_level_note.fist_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${CONFIGS.constants.two_level_note.second_column_name}</th>\n`;
       markdown += `    <th>${CONFIGS.constants.two_level_note.third_column_name}</th>\n`;
       markdown += '  </tr>\n';
 
@@ -82,14 +85,14 @@ export class TwoLevelNote {
         if (item.theme !== currentTheme) {
           const countRows = jsonData.filter((it) => it.theme === item.theme).length;
           markdown += `  <tr>\n`;
-          markdown += `    <td rowspan="${countRows}" style="vertical-align: middle;">${item.theme}</td>\n`;
+          markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item.theme}</td>\n`;
           currentTheme = item.theme;
           currentTopic = '';
         }
 
         if (item.topic !== currentTopic) {
           const countRows = jsonData.filter((it) => it.theme === item.theme && it.topic === item.topic).length;
-          markdown += `    <td rowspan="${countRows}" style="vertical-align: middle;">${item.topic}</td>\n`;
+          markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item.topic}</td>\n`;
           currentTopic = item.topic;
         }
         markdown += `    <td><a href="${item.link}">${item.title}</a></td>\n`;
@@ -104,9 +107,9 @@ export class TwoLevelNote {
   }
 
   toMarkdown() {
-    if (this.configs.type === 'markdown') {
+    if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
       return this.configs.content;
-    } else if (this.configs.type === 'table') {
+    } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
       const jsonData = this.toJson() as TTwoLevelNote[];
       const linksGroupedByTheme = groupObjectArrayByKey(jsonData, 'theme');
 
@@ -133,8 +136,8 @@ export class TwoLevelNote {
       }
 
       return contentArr.join('\n');
-    } else if (this.configs.type === 'json') {
-      const linksGroupedByTheme = groupObjectArrayByKey(this.configs.content, 'theme');
+    } else if (this.configs.type === FILE_TYPE_ENUM.JSON) {
+      const linksGroupedByTheme = groupObjectArrayByKey(this.configs.content as TLinkInfo[], 'theme');
 
       const contentArr: string[] = [];
 

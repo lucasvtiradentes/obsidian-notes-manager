@@ -83,7 +83,7 @@ export function markdownTableToJson({ mdContent }: { mdContent: string }) {
     const thContentRegex = /<th\b[^>]*>(.*?)<\/th>/gi;
     const thMatches = (headerItem ?? '').match(thContentRegex);
     if (!thMatches) return [];
-    return thMatches.map((match) => match.replace(/<\/?th>/g, ''));
+    return thMatches.map((match) => match.replace(/<\/?th[^>]*>/g, ''));
   })();
 
   const tableRows = (() => {

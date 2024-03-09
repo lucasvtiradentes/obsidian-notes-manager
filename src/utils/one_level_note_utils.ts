@@ -3,18 +3,19 @@ import { CONFIGS } from 'src/consts';
 import { groupObjectArrayByKey } from './array_utils';
 import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentByIndex, markdownTableToJson } from './markdown_utils';
 import { TLevelNoteConfigs, TLinkInfo } from './note_utils';
+import { FILE_TYPE_ENUM } from './obsidian_utils';
 
-type TOneLevelNote = Omit<TLinkInfo, 'topic'>;
+export type TOneLevelNote = Omit<TLinkInfo, 'topic'>;
 type TOneLevelNoteConfigs = TLevelNoteConfigs<TOneLevelNote>;
 
 export class OneLevelNote {
   constructor(private configs: TOneLevelNoteConfigs) {}
 
   toJson(): TOneLevelNote[] {
-    if (this.configs.type === 'json') {
-      return this.configs.content;
-    } else if (this.configs.type === 'markdown') {
-      const toc = generateTOC(this.configs.content);
+    if (this.configs.type === FILE_TYPE_ENUM.JSON) {
+      return this.configs.content as TOneLevelNote[];
+    } else if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
+      const toc = generateTOC(this.configs.content as string);
       const linksPerSection = Array.from(toc.keys()).map((index) => {
         const indexInfo = toc.get(index)!;
         return {
@@ -30,8 +31,8 @@ export class OneLevelNote {
       }, [] as TOneLevelNote[]);
 
       return reducedLinks;
-    } else if (this.configs.type === 'table') {
-      const jsonData = markdownTableToJson({ mdContent: this.configs.content });
+    } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
+      const jsonData = markdownTableToJson({ mdContent: this.configs.content as string });
       const [themeKey, linkKey] = Object.keys(jsonData[0]);
       const result: TOneLevelNote[] = jsonData.map((item) => {
         const { label, link } = extractLinkInfo(item[linkKey]);
@@ -51,10 +52,10 @@ export class OneLevelNote {
   toTable() {
     const jsonData = this.toJson();
     const content = (() => {
+      const verticalAlignmentStyle = `style="vertical-align: middle;"`;
       let markdown = '<table>\n';
       markdown += '  <tr>\n';
-      markdown += `    <th style="vertical-align: middle;">${CONFIGS.constants.two_level_note.fist_column_name}</th>\n`;
-      markdown += `    <th style="vertical-align: middle;">${CONFIGS.constants.two_level_note.second_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${CONFIGS.constants.two_level_note.fist_column_name}</th>\n`;
       markdown += `    <th>${CONFIGS.constants.two_level_note.third_column_name}</th>\n`;
       markdown += '  </tr>\n';
 
@@ -64,8 +65,11 @@ export class OneLevelNote {
         if (item.theme !== currentTheme) {
           const countRows = jsonData.filter((it) => it.theme === item.theme).length;
           markdown += `  <tr>\n`;
-          markdown += `    <td rowspan="${countRows}" style="vertical-align: middle;">${item.theme}</td>\n`;
+          markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item.theme}</td>\n`;
           currentTheme = item.theme;
+        } else {
+          markdown += `  <tr>\n`;
+          markdown += `    <!-- <td>${item.theme}</td> -->\n`;
         }
 
         markdown += `    <td><a href="${item.link}">${item.title}</a></td>\n`;
@@ -80,9 +84,9 @@ export class OneLevelNote {
   }
 
   toMarkdown() {
-    if (this.configs.type === 'markdown') {
+    if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
       return this.configs.content;
-    } else if (this.configs.type === 'table') {
+    } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
       const jsonData = this.toJson() as TOneLevelNote[];
       const groupItems = groupObjectArrayByKey(jsonData, 'theme');
       const contentArr: string[] = [];
@@ -96,8 +100,8 @@ export class OneLevelNote {
       }
 
       return contentArr.join('\n');
-    } else if (this.configs.type === 'json') {
-      const groupItems = groupObjectArrayByKey(this.configs.content, 'theme');
+    } else if (this.configs.type === FILE_TYPE_ENUM.JSON) {
+      const groupItems = groupObjectArrayByKey(this.configs.content as TOneLevelNote[], 'theme');
       const contentArr: string[] = [];
 
       for (const [group, items] of Object.entries(groupItems)) {
