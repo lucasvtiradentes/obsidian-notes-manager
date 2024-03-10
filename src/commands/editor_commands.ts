@@ -1,11 +1,12 @@
-import { Notice, Plugin } from 'obsidian';
+import { Notice } from 'obsidian';
 
 import { ERRORS } from '../consts';
+import NotesManager from '../main';
 import { FILE_TYPE_ENUM, TFileType, checkFileExistence, getCurrentEditedNoteContent, getFileType, getNoteType, updateCurrentNoteContent, updateCurrentNoteExtension } from '../utils/obsidian_utils';
 import { OneLevelNote, TOneLevelNoteConfigs } from '../utils/one_level_note_utils';
 import { TTwoLevelNoteConfigs, TwoLevelNote } from '../utils/two_level_note_utils';
 
-type TCommandAction = { typedThis: Plugin; fileType: TFileType };
+type TCommandAction = { typedThis: NotesManager; fileType: TFileType };
 
 type TCommand = {
   title: string;
@@ -19,7 +20,7 @@ function isValidNoteType(allowedTypes: TFileType[], fileToCheck: TFileType) {
 }
 
 export function addEditorCommandsToObsidian() {
-  const typedThis = this as Plugin;
+  const typedThis = this as NotesManager;
 
   const commandsArr: TCommand[] = [
     {
@@ -64,7 +65,6 @@ export async function convertNoteToTable({ fileType, typedThis }: TCommandAction
   if (fileType === FILE_TYPE_ENUM._) return;
 
   const originalFileContent = getCurrentEditedNoteContent(typedThis);
-  const fileContent = fileType === 'JSON' ? JSON.parse(originalFileContent) : originalFileContent;
   const noteType = getNoteType(typedThis, fileType);
 
   if (noteType === 'ONE_LEVEL') {
@@ -77,7 +77,18 @@ export async function convertNoteToTable({ fileType, typedThis }: TCommandAction
       return;
     }
 
-    const newContent = new OneLevelNote({ content: fileContent, type: fileType }).toTable();
+    const oneLevelConfigs: TOneLevelNoteConfigs =
+      fileType === 'JSON'
+        ? {
+            type: 'JSON',
+            content: JSON.parse(originalFileContent)
+          }
+        : {
+            type: fileType,
+            content: originalFileContent
+          };
+
+    const newContent = new OneLevelNote(oneLevelConfigs, typedThis.settings).toTable();
     updateCurrentNoteContent({ newContent, typedThis });
     updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
@@ -91,7 +102,18 @@ export async function convertNoteToTable({ fileType, typedThis }: TCommandAction
       return;
     }
 
-    const newContent = new TwoLevelNote({ content: fileContent, type: fileType }).toTable();
+    const twoLevelConfigs: TTwoLevelNoteConfigs =
+      fileType === 'JSON'
+        ? {
+            type: 'JSON',
+            content: JSON.parse(originalFileContent)
+          }
+        : {
+            type: fileType,
+            content: originalFileContent
+          };
+
+    const newContent = new TwoLevelNote(twoLevelConfigs, typedThis.settings).toTable();
     updateCurrentNoteContent({ newContent, typedThis });
     updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
@@ -127,7 +149,7 @@ export async function convertNoteToJSON({ fileType, typedThis }: TCommandAction)
             content: originalFileContent
           };
 
-    const newContent = new OneLevelNote(oneLevelConfigs).toJson();
+    const newContent = new OneLevelNote(oneLevelConfigs, typedThis.settings).toJson();
     updateCurrentNoteContent({ newContent: JSON.stringify(newContent, null, 2), typedThis });
     updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
@@ -152,7 +174,7 @@ export async function convertNoteToJSON({ fileType, typedThis }: TCommandAction)
             content: originalFileContent
           };
 
-    const newContent = new TwoLevelNote(twoLevelConfigs).toJson();
+    const newContent = new TwoLevelNote(twoLevelConfigs, typedThis.settings).toJson();
     updateCurrentNoteContent({ newContent: JSON.stringify(newContent, null, 2), typedThis });
     updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
@@ -188,7 +210,7 @@ export async function convertNoteToMarkdown({ fileType, typedThis }: TCommandAct
             content: originalFileContent
           };
 
-    const newContent = new OneLevelNote(oneLevelConfigs).toMarkdown();
+    const newContent = new OneLevelNote(oneLevelConfigs, typedThis.settings).toMarkdown();
     updateCurrentNoteContent({ newContent: newContent, typedThis });
     updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;
@@ -213,7 +235,7 @@ export async function convertNoteToMarkdown({ fileType, typedThis }: TCommandAct
             content: originalFileContent
           };
 
-    const newContent = new TwoLevelNote(twoLevelConfigs).toMarkdown();
+    const newContent = new TwoLevelNote(twoLevelConfigs, typedThis.settings).toMarkdown();
     updateCurrentNoteContent({ newContent: newContent, typedThis });
     updateCurrentNoteExtension({ typedThis, newExtension: destinationExtension });
     return;

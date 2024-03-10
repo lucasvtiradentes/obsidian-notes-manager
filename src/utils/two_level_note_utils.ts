@@ -1,4 +1,4 @@
-import { CONFIGS } from '../consts';
+import { TPluginSettings } from '../settings/settings';
 import { groupObjectArrayByKey, mergeArraysOfArrays } from './array_utils';
 import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentByIndex, markdownTableToJson } from './markdown_utils';
 import { TLevelNoteConfigs, TLinkInfo } from './note_utils';
@@ -8,7 +8,10 @@ export type TTwoLevelNote = TLinkInfo;
 export type TTwoLevelNoteConfigs = TLevelNoteConfigs<TTwoLevelNote>;
 
 export class TwoLevelNote {
-  constructor(private configs: TTwoLevelNoteConfigs) {}
+  constructor(
+    private configs: TTwoLevelNoteConfigs,
+    private settings: TPluginSettings
+  ) {}
 
   private getLinksGroupedByTheme(content: string) {
     const toc = generateTOC(content);
@@ -72,9 +75,9 @@ export class TwoLevelNote {
       const verticalAlignmentStyle = `style="vertical-align: middle;"`;
       let markdown = '<table>\n';
       markdown += '  <tr>\n';
-      markdown += `    <th ${verticalAlignmentStyle}>${CONFIGS.constants.two_level_note.fist_column_name}</th>\n`;
-      markdown += `    <th ${verticalAlignmentStyle}>${CONFIGS.constants.two_level_note.second_column_name}</th>\n`;
-      markdown += `    <th>${CONFIGS.constants.two_level_note.third_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_first_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_second_column_name}</th>\n`;
+      markdown += `    <th>${this.settings.two_level_note_third_column_name}</th>\n`;
       markdown += '  </tr>\n';
 
       let currentTheme: string = '';

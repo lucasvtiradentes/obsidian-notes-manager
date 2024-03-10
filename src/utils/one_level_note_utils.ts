@@ -1,4 +1,4 @@
-import { CONFIGS } from '../consts';
+import { TPluginSettings } from '../settings/settings';
 import { groupObjectArrayByKey } from './array_utils';
 import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentByIndex, markdownTableToJson } from './markdown_utils';
 import { TLevelNoteConfigs, TLinkInfo } from './note_utils';
@@ -8,7 +8,10 @@ export type TOneLevelNote = Omit<TLinkInfo, 'topic'>;
 export type TOneLevelNoteConfigs = TLevelNoteConfigs<TOneLevelNote>;
 
 export class OneLevelNote {
-  constructor(private configs: TOneLevelNoteConfigs) {}
+  constructor(
+    private configs: TOneLevelNoteConfigs,
+    private settings: TPluginSettings
+  ) {}
 
   toJson(): TOneLevelNote[] {
     if (this.configs.type === FILE_TYPE_ENUM.JSON) {
@@ -55,8 +58,8 @@ export class OneLevelNote {
       const verticalAlignmentStyle = `style="vertical-align: middle;"`;
       let markdown = '<table>\n';
       markdown += '  <tr>\n';
-      markdown += `    <th ${verticalAlignmentStyle}>${CONFIGS.constants.two_level_note.fist_column_name}</th>\n`;
-      markdown += `    <th>${CONFIGS.constants.two_level_note.third_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_first_column_name}</th>\n`;
+      markdown += `    <th>${this.settings.two_level_note_third_column_name}</th>\n`;
       markdown += '  </tr>\n';
 
       let currentTheme: string = '';
