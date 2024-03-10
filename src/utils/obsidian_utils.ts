@@ -4,10 +4,6 @@ import { TAbstractFile } from 'obsidian';
 import { constArrayToEnumObject } from './array_utils';
 import { generateTOC, markdownTableToJson } from './markdown_utils';
 
-const NOTE_TYPE = ['ONE_LEVEL', 'TWO_LEVEL', '_'] as const;
-export const NOTE_TYPE_ENUM = constArrayToEnumObject(NOTE_TYPE);
-export type TNoteType = (typeof NOTE_TYPE)[number];
-
 const FILE_TYPE = ['JSON', 'TABLE', 'MARKDOWN', '_'] as const;
 export const FILE_TYPE_ENUM = constArrayToEnumObject(FILE_TYPE);
 export type TFileType = (typeof FILE_TYPE)[number];
@@ -23,6 +19,10 @@ export function getFileType(content: string, file: TFile): TFileType {
 
   return FILE_TYPE_ENUM._;
 }
+
+const NOTE_TYPE = ['ONE_LEVEL', 'TWO_LEVEL', '_'] as const;
+export const NOTE_TYPE_ENUM = constArrayToEnumObject(NOTE_TYPE);
+export type TNoteType = (typeof NOTE_TYPE)[number];
 
 export function getNoteType(content: string, fileType: TFileType): TNoteType {
   let noteType: TNoteType = NOTE_TYPE_ENUM._;
@@ -70,22 +70,4 @@ export async function getCurrentActiveFileContent(obsidianPlugin: Plugin) {
 // export function updateCurrentNoteContent(props: { typedThis: Plugin; newContent: string }) {
 //   const activeEditor = props.typedThis.app.workspace.activeEditor!;
 //   activeEditor.editor?.setValue(props.newContent);
-// }
-
-// new SampleModal(typedThis.app).open()
-
-// class SampleModal extends Modal {
-//   constructor(app: App) {
-//     super(app);
-//   }
-
-//   onOpen() {
-//     const { contentEl } = this;
-//     contentEl.setText('Woah!');
-//   }
-
-//   onClose() {
-//     const { contentEl } = this;
-//     contentEl.empty();
-//   }
 // }
