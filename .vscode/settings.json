@@ -12,5 +12,6 @@
 	},
 	"files.associations": {
 		".czrc": "json"
-	}
+	},
+  "typescript.preferences.importModuleSpecifier": "relative"
 }

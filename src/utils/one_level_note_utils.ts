@@ -1,5 +1,4 @@
-import { CONFIGS } from 'src/consts';
-
+import { CONFIGS } from '../consts';
 import { groupObjectArrayByKey } from './array_utils';
 import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentByIndex, markdownTableToJson } from './markdown_utils';
 import { TLevelNoteConfigs, TLinkInfo } from './note_utils';

@@ -1,5 +1,6 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
-import NotesManager from 'src/main';
+
+import NotesManager from '../main';
 
 export type TPluginSettings = {
   mySetting: string;

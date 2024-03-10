@@ -1,7 +1,7 @@
 import { Plugin, TFile } from 'obsidian';
 import { TAbstractFile } from 'obsidian';
-import { constArrayToEnumObject } from 'src/utils/array_utils';
 
+import { constArrayToEnumObject } from './array_utils';
 import { generateTOC, markdownTableToJson } from './markdown_utils';
 
 const NOTE_TYPE = ['ONE_LEVEL', 'TWO_LEVEL', '_'] as const;

@@ -1,8 +1,9 @@
 import { Notice, Plugin } from 'obsidian';
-import { ERRORS } from 'src/consts';
-import { FILE_TYPE_ENUM, TFileType, checkFileExistence, getCurrentEditedNoteContent, getFileType, getNoteType, updateCurrentNoteContent, updateCurrentNoteExtension } from 'src/utils/obsidian_utils';
-import { OneLevelNote, TOneLevelNoteConfigs } from 'src/utils/one_level_note_utils';
-import { TTwoLevelNoteConfigs, TwoLevelNote } from 'src/utils/two_level_note_utils';
+
+import { ERRORS } from '../consts';
+import { FILE_TYPE_ENUM, TFileType, checkFileExistence, getCurrentEditedNoteContent, getFileType, getNoteType, updateCurrentNoteContent, updateCurrentNoteExtension } from '../utils/obsidian_utils';
+import { OneLevelNote, TOneLevelNoteConfigs } from '../utils/one_level_note_utils';
+import { TTwoLevelNoteConfigs, TwoLevelNote } from '../utils/two_level_note_utils';
 
 type TCommandAction = { typedThis: Plugin; fileType: TFileType };
 
