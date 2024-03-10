@@ -7,7 +7,11 @@ export const CONFIGS = {
     title: 'Sample Plugin',
     class_name: 'my-plugin-ribbon-class'
   },
-  constants: {}
+  css_classes: {
+    notes_manager_file: 'notes_manager_file',
+    settings_section: 'settings_section',
+    settings_section_title: 'settings_section_title'
+  }
 } as const;
 
 export const ERRORS = {

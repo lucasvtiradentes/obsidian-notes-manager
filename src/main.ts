@@ -4,6 +4,7 @@ import { addEditorCommandsToObsidian } from './commands/contexts/editor_commands
 import { addFileCommandsToObsidian } from './commands/contexts/file_commands';
 import { addKeybindedCommandsToObsidian } from './commands/contexts/keybinded_commands';
 import { addPalletCommandsToObsidian } from './commands/contexts/pallet_commands';
+import { toogleCustomFileSufix } from './commands/toogle_custom_file_sufix';
 import { CONFIGS } from './consts';
 import { addRibbonToObsidian } from './ribbon/ribbon';
 import { TPluginSettings, addSettingsToObsidian } from './settings/settings';
@@ -13,6 +14,7 @@ export default class NotesManager extends Plugin {
 
   async onload() {
     await this.loadSettings();
+
     addSettingsToObsidian.call(this);
     addRibbonToObsidian.call(this);
 
@@ -22,6 +24,7 @@ export default class NotesManager extends Plugin {
     addEditorCommandsToObsidian.call(this);
 
     this.registerExtensions(['json'], 'markdown');
+    window.setTimeout(() => toogleCustomFileSufix.call(this), 2 * 1000);
   }
 
   onunload() {}

@@ -1,7 +1,7 @@
 import { Plugin } from 'obsidian';
 
 import { generateVaultToc } from '../generate_toc';
-import { showModal } from '../show_modal';
+import { toogleCustomFileSufix } from '../toogle_custom_file_sufix';
 
 export function addKeybindedCommandsToObsidian() {
   const typedThis = this as Plugin;
@@ -20,7 +20,7 @@ export function addKeybindedCommandsToObsidian() {
     name: 'Example command',
     hotkeys: [{ modifiers: ['Mod', 'Shift'], key: ' ' }],
     callback: () => {
-      showModal.call(typedThis);
+      toogleCustomFileSufix.call(typedThis);
     }
   });
 }

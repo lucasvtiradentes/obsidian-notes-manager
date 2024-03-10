@@ -1,5 +1,6 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
+import { CONFIGS } from '../consts';
 import NotesManager from '../main';
 
 export type TPluginSettings = {
@@ -67,8 +68,8 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
       }
     };
 
-    const settings_section01 = containerEl.createEl('div', { cls: 'settings_section' });
-    settings_section01.createEl('div', { text: 'General configs', cls: 'settings_section_title' });
+    const settings_section01 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
+    settings_section01.createEl('div', { text: 'General configs', cls: CONFIGS.css_classes.settings_section_title });
 
     new Setting(containerEl).setName('Use file sufix').addToggle((toggle) =>
       toggle.setValue(settings.use_file_sufix).onChange(async (value) => {
@@ -118,8 +119,8 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    const settings_section02 = containerEl.createEl('div', { cls: 'settings_section' });
-    settings_section02.createEl('div', { text: 'One level notes configs', cls: 'settings_section_title' });
+    const settings_section02 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
+    settings_section02.createEl('div', { text: 'One level notes configs', cls: CONFIGS.css_classes.settings_section_title });
 
     new Setting(containerEl).setName('First column name').addText((text) =>
       text
@@ -143,8 +144,8 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    const settings_section03 = containerEl.createEl('div', { cls: 'settings_section' });
-    settings_section03.createEl('div', { text: 'Two level notes configs', cls: 'settings_section_title' });
+    const settings_section03 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
+    settings_section03.createEl('div', { text: 'Two level notes configs', cls: CONFIGS.css_classes.settings_section_title });
 
     new Setting(containerEl).setName('First column name').addText((text) =>
       text
