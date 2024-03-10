@@ -1,39 +1,32 @@
-import { Plugin } from 'obsidian';
-
+import NotesManager from '../main';
 import { addSectionToContent, generateTOC } from '../utils/markdown_utils';
 
-export function addKeybindedCommandsToObsidian() {
-  const typedThis = this as Plugin;
+export function generateVaultToc() {
+  const typedThis = this as NotesManager;
 
-  typedThis.addCommand({
-    id: 'example-command',
-    name: 'Example command',
-    hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'a' }],
-    callback: () => {
-      const filesAndFolders = typedThis.app.vault
-        .getAllLoadedFiles()
-        .filter((item) => item.path !== '/')
-        .map((item) => ({ name: item.name, path: item.path, is_file: item.name.includes('.'), level: item.path.split('/').length }));
-      const parsedFiles = filesAndFolders;
+  const filesAndFolders = typedThis.app.vault
+    .getAllLoadedFiles()
+    .filter((item) => item.path !== '/')
+    .map((item) => ({ name: item.name, path: item.path, is_file: item.name.includes('.'), level: item.path.split('/').length }));
+  const parsedFiles = filesAndFolders;
 
-      console.log(parsedFiles, sortFilesAndDirectories([...parsedFiles]));
+  console.log(parsedFiles, sortFilesAndDirectories([...parsedFiles]));
 
-      const parsedResult = parsedFiles
-        .map((item) => ({ ...item, name: item.name }))
-        .map((item) => ({ ...item, level: item.name.split('/').length }))
-        .map((item) => ({ ...item, title: `${'#'.repeat(item.level)} ${item.name}` }));
-      const mdHeadings = parsedResult.map((item) => item.title).join('\n');
-      const tocContent = generateTOC(mdHeadings);
+  const parsedResult = parsedFiles
+    .map((item) => ({ ...item, name: item.name }))
+    .map((item) => ({ ...item, level: item.name.split('/').length }))
+    .map((item) => ({ ...item, title: `${'#'.repeat(item.level)} ${item.name}` }));
+  const mdHeadings = parsedResult.map((item) => item.title).join('\n');
+  const tocContent = generateTOC(mdHeadings);
 
-      let content = '';
-      for (const [key, value] of tocContent.entries()) {
-        content = addSectionToContent(content, `${'#'.repeat(value.level)} ${key} - ${value.title}`, '\ncontent\n');
-      }
+  let content = '';
+  for (const [key, value] of tocContent.entries()) {
+    content = addSectionToContent(content, `${'#'.repeat(value.level)} ${key} - ${value.title}`, '\ncontent\n');
+  }
 
-      console.log(content);
-    }
-  });
+  console.log(content);
 }
+
 type TFileData = {
   name: string;
   path: string;

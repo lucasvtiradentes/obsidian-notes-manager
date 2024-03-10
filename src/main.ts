@@ -1,9 +1,9 @@
 import { Plugin } from 'obsidian';
 
-import { addEditorCommandsToObsidian } from './commands/editor_commands';
-import { addFileCommandsToObsidian } from './commands/file_commands';
-import { addKeybindedCommandsToObsidian } from './commands/keybinded_commands';
-import { addPalletCommandsToObsidian } from './commands/pallet_commands';
+import { addEditorCommandsToObsidian } from './commands/contexts/editor_commands';
+import { addFileCommandsToObsidian } from './commands/contexts/file_commands';
+import { addKeybindedCommandsToObsidian } from './commands/contexts/keybinded_commands';
+import { addPalletCommandsToObsidian } from './commands/contexts/pallet_commands';
 import { CONFIGS } from './consts';
 import { addRibbonToObsidian } from './ribbon/ribbon';
 import { TPluginSettings, addSettingsToObsidian } from './settings/settings';

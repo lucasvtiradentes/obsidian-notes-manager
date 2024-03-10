@@ -12,8 +12,7 @@ const FILE_TYPE = ['JSON', 'TABLE', 'MARKDOWN', '_'] as const;
 export const FILE_TYPE_ENUM = constArrayToEnumObject(FILE_TYPE);
 export type TFileType = (typeof FILE_TYPE)[number];
 
-export function getFileType(file: TFile, obsidianPlugin: Plugin): TFileType {
-  const content = getCurrentEditedNoteContent(obsidianPlugin);
+export function getFileType(content: string, file: TFile): TFileType {
   const extension = file.extension;
 
   if (extension === 'json') return FILE_TYPE_ENUM.JSON;
@@ -25,8 +24,7 @@ export function getFileType(file: TFile, obsidianPlugin: Plugin): TFileType {
   return FILE_TYPE_ENUM._;
 }
 
-export function getNoteType(obsidianPlugin: Plugin, fileType: TFileType): TNoteType {
-  const content = getCurrentEditedNoteContent(obsidianPlugin);
+export function getNoteType(content: string, fileType: TFileType): TNoteType {
   let noteType: TNoteType = NOTE_TYPE_ENUM._;
 
   if (fileType === FILE_TYPE_ENUM.MARKDOWN) {
@@ -51,17 +49,6 @@ export function checkFileExistence(props: { typedThis: Plugin; filePath: string 
   return file !== null;
 }
 
-export async function updateCurrentNoteExtension(props: { typedThis: Plugin; newExtension: string }) {
-  const file = props.typedThis.app.workspace.getActiveFile()!;
-  const newPath = file.path.replace(file.extension, props.newExtension);
-  await props.typedThis.app.vault.rename(file, newPath);
-}
-
-export function updateCurrentNoteContent(props: { typedThis: Plugin; newContent: string }) {
-  const activeEditor = props.typedThis.app.workspace.activeEditor!;
-  activeEditor.editor?.setValue(props.newContent);
-}
-
 export function getCurrentEditedNoteContent(obsidianPlugin: Plugin) {
   const activeEditor = obsidianPlugin.app.workspace.activeEditor!;
   const text = activeEditor.editor!.getDoc().getValue();
@@ -73,3 +60,32 @@ export async function getCurrentActiveFileContent(obsidianPlugin: Plugin) {
   const noteFileContent = await obsidianPlugin.app.vault.read(noteFile);
   return noteFileContent;
 }
+
+// export async function updateCurrentNoteExtension(props: { typedThis: Plugin; newExtension: string }) {
+//   const file = props.typedThis.app.workspace.getActiveFile()!;
+//   const newPath = file.path.replace(file.extension, props.newExtension);
+//   await props.typedThis.app.vault.rename(file, newPath);
+// }
+
+// export function updateCurrentNoteContent(props: { typedThis: Plugin; newContent: string }) {
+//   const activeEditor = props.typedThis.app.workspace.activeEditor!;
+//   activeEditor.editor?.setValue(props.newContent);
+// }
+
+// new SampleModal(typedThis.app).open()
+
+// class SampleModal extends Modal {
+//   constructor(app: App) {
+//     super(app);
+//   }
+
+//   onOpen() {
+//     const { contentEl } = this;
+//     contentEl.setText('Woah!');
+//   }
+
+//   onClose() {
+//     const { contentEl } = this;
+//     contentEl.empty();
+//   }
+// }
