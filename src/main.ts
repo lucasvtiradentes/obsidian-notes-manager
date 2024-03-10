@@ -24,7 +24,10 @@ export default class NotesManager extends Plugin {
     addEditorCommandsToObsidian.call(this);
 
     this.registerExtensions(['json'], 'markdown');
-    window.setTimeout(() => toogleCustomFileSufix.call(this), 2 * 1000);
+
+    if (this.settings.use_file_sufix && this.settings.hide_file_sufix) {
+      window.setTimeout(() => toogleCustomFileSufix.call(this, 'hide'), 2 * 1000);
+    }
   }
 
   onunload() {}

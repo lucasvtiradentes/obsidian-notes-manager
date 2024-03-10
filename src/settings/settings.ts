@@ -1,7 +1,9 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
+import { toogleCustomFileSufix } from '../commands/toogle_custom_file_sufix';
 import { CONFIGS } from '../consts';
 import NotesManager from '../main';
+import { constArrayToEnumObject } from '../utils/array_utils';
 
 export type TPluginSettings = {
   use_file_sufix: boolean;
@@ -48,10 +50,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     containerEl.empty();
     const settings = this.plugin.settings;
 
-    const elementClasses = {
-      fileSufix: 'fileSufix',
-      hideFileSufix: 'hideFileSufix'
-    } as const;
+    const elementClasses = constArrayToEnumObject(['fileSufix', 'hideFileSufix']);
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -68,6 +67,14 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
       }
     };
 
+    const shouldHideFileSufix = (value: boolean) => {
+      if (value) {
+        toogleCustomFileSufix.call(this.plugin, 'hide');
+      } else {
+        toogleCustomFileSufix.call(this.plugin, 'show');
+      }
+    };
+
     const settings_section01 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
     settings_section01.createEl('div', { text: 'General configs', cls: CONFIGS.css_classes.settings_section_title });
 
@@ -77,8 +84,10 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
         await this.plugin.saveSettings();
         if (value) {
           modifyDependentSettings('show');
+          shouldHideFileSufix(settings.hide_file_sufix);
         } else {
           modifyDependentSettings('hide');
+          toogleCustomFileSufix.call(this.plugin, 'show');
         }
       })
     );
@@ -89,6 +98,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
       .addToggle((toggle) =>
         toggle.setValue(settings.hide_file_sufix).onChange(async (value) => {
           settings.hide_file_sufix = value;
+          shouldHideFileSufix(value);
           await this.plugin.saveSettings();
         })
       );
