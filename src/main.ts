@@ -4,7 +4,7 @@ import { addEditorCommandsToObsidian } from './commands/contexts/editor_commands
 import { addFileCommandsToObsidian } from './commands/contexts/file_commands';
 import { addKeybindedCommandsToObsidian } from './commands/contexts/keybinded_commands';
 import { addPalletCommandsToObsidian } from './commands/contexts/pallet_commands';
-import { toogleCustomFileSufix } from './commands/toogle_custom_file_sufix';
+import { styleAllFilesBadges, styleAllFilesExtensions } from './commands/toogle_custom_file_sufix';
 import { CONFIGS } from './consts';
 import { addRibbonToObsidian } from './ribbon/ribbon';
 import { TPluginSettings, addSettingsToObsidian } from './settings/settings';
@@ -25,9 +25,17 @@ export default class NotesManager extends Plugin {
 
     this.registerExtensions(['json'], 'markdown');
 
-    if (this.settings.use_file_sufix && this.settings.hide_file_sufix) {
-      window.setTimeout(() => toogleCustomFileSufix.call(this, 'hide'), 2 * 1000);
-    }
+    window.setTimeout(() => {
+      if (!this.settings.use_file_sufix) return;
+
+      if (!this.settings.show_file_sufix) {
+        styleAllFilesExtensions.call(this, 'hide');
+      }
+
+      if (this.settings.show_file_badge) {
+        styleAllFilesBadges.call(this, 'show');
+      }
+    }, 2 * 1000);
   }
 
   onunload() {}

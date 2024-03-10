@@ -1,13 +1,14 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
-import { toogleCustomFileSufix } from '../commands/toogle_custom_file_sufix';
+import { styleAllFilesBadges, styleAllFilesExtensions } from '../commands/toogle_custom_file_sufix';
 import { CONFIGS } from '../consts';
 import NotesManager from '../main';
 import { constArrayToEnumObject } from '../utils/array_utils';
 
 export type TPluginSettings = {
   use_file_sufix: boolean;
-  hide_file_sufix: boolean;
+  show_file_badge: boolean;
+  show_file_sufix: boolean;
   file_sufix: string;
   one_level_note_first_column_name: string;
   one_level_note_second_column_name: string;
@@ -18,7 +19,8 @@ export type TPluginSettings = {
 
 export const DEFAULT_SETTINGS: TPluginSettings = {
   use_file_sufix: true,
-  hide_file_sufix: true,
+  show_file_badge: true,
+  show_file_sufix: false,
   file_sufix: '.nm',
   one_level_note_first_column_name: 'THEME',
   one_level_note_second_column_name: 'LINK',
@@ -49,29 +51,29 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     const { containerEl } = this;
     containerEl.empty();
     const settings = this.plugin.settings;
-
-    const elementClasses = constArrayToEnumObject(['fileSufix', 'hideFileSufix']);
+    const elementClasses = constArrayToEnumObject(['show_file_badge_section', 'file_sufix_section', 'show_file_sufix_section']);
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     const modifyDependentSettings = (mode: 'show' | 'hide') => {
-      const hideFileSufixEl = containerEl.getElementsByClassName(elementClasses.hideFileSufix)[0];
-      const fileSufixEl = containerEl.getElementsByClassName(elementClasses.fileSufix)[0];
+      for (const item of Object.values(elementClasses)) {
+        const element = containerEl.getElementsByClassName(item)[0];
 
-      if (mode === 'show') {
-        hideFileSufixEl?.setAttribute('style', 'display: block;');
-        fileSufixEl?.setAttribute('style', 'display: block;');
-      } else if (mode === 'hide') {
-        hideFileSufixEl?.setAttribute('style', 'display: none;');
-        fileSufixEl?.setAttribute('style', 'display: none;');
+        if (mode === 'show') {
+          if (element.classList.contains(CONFIGS.css_classes.settings_section_hided)) {
+            element.classList.remove(CONFIGS.css_classes.settings_section_hided);
+          }
+        } else {
+          element.classList.add(CONFIGS.css_classes.settings_section_hided);
+        }
       }
     };
 
     const shouldHideFileSufix = (value: boolean) => {
       if (value) {
-        toogleCustomFileSufix.call(this.plugin, 'hide');
+        styleAllFilesExtensions.call(this.plugin, 'show');
       } else {
-        toogleCustomFileSufix.call(this.plugin, 'show');
+        styleAllFilesExtensions.call(this.plugin, 'hide');
       }
     };
 
@@ -84,20 +86,35 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
         await this.plugin.saveSettings();
         if (value) {
           modifyDependentSettings('show');
-          shouldHideFileSufix(settings.hide_file_sufix);
+          shouldHideFileSufix(settings.show_file_sufix);
         } else {
           modifyDependentSettings('hide');
-          toogleCustomFileSufix.call(this.plugin, 'show');
+          styleAllFilesExtensions.call(this.plugin, 'show');
         }
       })
     );
 
     new Setting(containerEl)
-      .setName('Hide file sufix')
-      .setClass(elementClasses.hideFileSufix)
+      .setName('Show file Badge')
+      .setClass(elementClasses.show_file_badge_section)
       .addToggle((toggle) =>
-        toggle.setValue(settings.hide_file_sufix).onChange(async (value) => {
-          settings.hide_file_sufix = value;
+        toggle.setValue(settings.show_file_badge).onChange(async (value) => {
+          settings.show_file_badge = value;
+          await this.plugin.saveSettings();
+          if (value) {
+            styleAllFilesBadges.call(this.plugin, 'show');
+          } else {
+            styleAllFilesBadges.call(this.plugin, 'hide');
+          }
+        })
+      );
+
+    new Setting(containerEl)
+      .setName('Show file sufix')
+      .setClass(elementClasses.show_file_sufix_section)
+      .addToggle((toggle) =>
+        toggle.setValue(settings.show_file_sufix).onChange(async (value) => {
+          settings.show_file_sufix = value;
           shouldHideFileSufix(value);
           await this.plugin.saveSettings();
         })
@@ -105,7 +122,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
 
     new Setting(containerEl)
       .setName('File sufix')
-      .setClass(elementClasses.fileSufix)
+      .setClass(elementClasses.file_sufix_section)
       .addText((text) =>
         text
           .setPlaceholder('Type the file sufix')

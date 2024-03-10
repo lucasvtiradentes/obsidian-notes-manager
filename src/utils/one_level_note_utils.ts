@@ -58,8 +58,8 @@ export class OneLevelNote {
       const verticalAlignmentStyle = `style="vertical-align: middle;"`;
       let markdown = '<table>\n';
       markdown += '  <tr>\n';
-      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_first_column_name}</th>\n`;
-      markdown += `    <th>${this.settings.two_level_note_third_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.one_level_note_first_column_name}</th>\n`;
+      markdown += `    <th>${this.settings.one_level_note_second_column_name}</th>\n`;
       markdown += '  </tr>\n';
 
       let currentTheme: string = '';

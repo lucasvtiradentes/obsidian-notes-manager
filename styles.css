@@ -1,3 +1,5 @@
+/* SETTINGS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
 .settings_section {
   border: 1px solid var(--background-modifier-border);
   padding: 10px;
@@ -8,6 +10,25 @@
   font-weight: 600;
 }
 
+.settings_section_hided {
+  display: none;
+}
+
+/* FILES LIST +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
 .notes_manager_file {
-  background-color: blue;
+  display: flex;
+}
+
+.notes_manager_file_icon {
+  margin-left: auto;
+  background-color: var(--background-modifier-hover);
+  border-radius: var(--radius-s);
+  font-size: 9px;
+  font-weight: var(--font-semibold);
+  letter-spacing: 0.05em;
+  line-height: var(--line-height-normal);
+  padding: 0 var(--size-4-1);
+  text-transform: uppercase;
+  align-self: center;
 }

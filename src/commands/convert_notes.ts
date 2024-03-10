@@ -5,7 +5,7 @@ import NotesManager from '../main';
 import { FILE_TYPE_ENUM, NOTE_TYPE_ENUM, TFileType, checkFileExistence, getNoteType } from '../utils/obsidian_utils';
 import { OneLevelNote, TOneLevelNoteConfigs } from '../utils/one_level_note_utils';
 import { TTwoLevelNoteConfigs, TwoLevelNote } from '../utils/two_level_note_utils';
-import { styleFile } from './toogle_custom_file_sufix';
+import { styleFileBadge, styleFileExtension } from './toogle_custom_file_sufix';
 
 export type TCommandAction = { file: TFile; content: string; typedThis: NotesManager; fileType: TFileType };
 
@@ -39,7 +39,11 @@ async function convertNoteToX({ file, content, fileType, typedThis, destinationE
     await typedThis.app.vault.modify(obsidianFile, parsedNewContent);
     await typedThis.app.vault.rename(obsidianFile, destinationFile);
     const fileElement = document.querySelector(`.${CONFIGS.obisidan_classes.file_class_name}[${CONFIGS.obisidan_classes.file_path_attribute}="${obsidianFile.path}"] > div`)! as HTMLDivElement;
-    styleFile(typedThis, file.basename, fileElement, typedThis.settings.hide_file_sufix ? 'hide' : 'show');
+
+    if (typedThis.settings.use_file_sufix) {
+      styleFileExtension(typedThis, file.basename, fileElement, typedThis.settings.show_file_sufix ? 'show' : 'hide');
+      styleFileBadge(fileElement, typedThis.settings.show_file_badge ? 'show' : 'hide');
+    }
   };
 
   if (noteType === NOTE_TYPE_ENUM.ONE_LEVEL) {
