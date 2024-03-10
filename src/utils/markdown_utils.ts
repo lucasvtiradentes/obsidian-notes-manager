@@ -152,3 +152,7 @@ export const getSectionContentByTitle = (content: string, title: string) => {
 export const getSectionContentByIndex = (content: string, index: string) => {
   return getSectionContent(content, index, 'index');
 };
+
+export const addSectionToContent = (content: string, sectionTitle: string, sectionContent: string) => {
+  return `${content}${content === '' ? '' : '\n'}${sectionTitle}\n${sectionContent}`;
+};
