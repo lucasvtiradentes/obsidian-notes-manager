@@ -5,6 +5,7 @@ import NotesManager from '../main';
 import { FILE_TYPE_ENUM, NOTE_TYPE_ENUM, TFileType, checkFileExistence, getNoteType } from '../utils/obsidian_utils';
 import { OneLevelNote, TOneLevelNoteConfigs } from '../utils/one_level_note_utils';
 import { TTwoLevelNoteConfigs, TwoLevelNote } from '../utils/two_level_note_utils';
+import { styleFile } from './toogle_custom_file_sufix';
 
 export type TCommandAction = { file: TFile; content: string; typedThis: NotesManager; fileType: TFileType };
 
@@ -19,15 +20,26 @@ export type TCommand = {
 async function convertNoteToX({ file, content, fileType, typedThis, destinationExtension, to }: TCommandAction & { destinationExtension: string; to: 'toTable' | 'toMarkdown' | 'toJson' }) {
   if (fileType === FILE_TYPE_ENUM._) return;
 
-  const noteType = getNoteType(content, fileType);
-  const destinationFile = file.path.replace(file.extension, destinationExtension);
+  const destinationFile = (() => {
+    const finalName = file.path.replace(file.name, '#');
+    if (typedThis.settings.use_file_sufix) {
+      const alreadyHasSufix = file.basename.endsWith(typedThis.settings.file_sufix);
+      if (!alreadyHasSufix) {
+        return finalName.replace('#', `${file.basename}${typedThis.settings.file_sufix}.${file.extension}`);
+      }
+    }
+    return finalName.replace('#', `${file.basename}.${destinationExtension}`);
+  })();
   const destinationFileExists = checkFileExistence({ typedThis, filePath: destinationFile });
+  const noteType = getNoteType(content, fileType);
 
   const updateAndRenameFile = async <T>(newContent: string | T) => {
     const parsedNewContent = (to === 'toJson' ? JSON.stringify(newContent, null, 2) : newContent) as string;
     const obsidianFile = typedThis.app.vault.getFileByPath(file.path)!;
     await typedThis.app.vault.modify(obsidianFile, parsedNewContent);
     await typedThis.app.vault.rename(obsidianFile, destinationFile);
+    const fileElement = document.querySelector(`.nav-file-title[data-path="${obsidianFile.path}"] > div`)! as HTMLDivElement;
+    styleFile(typedThis, file.basename, fileElement, typedThis.settings.hide_file_sufix ? 'hide' : 'show');
   };
 
   if (noteType === NOTE_TYPE_ENUM.ONE_LEVEL) {

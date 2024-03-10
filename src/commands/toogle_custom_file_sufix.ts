@@ -21,16 +21,19 @@ export function toogleCustomFileSufix(mode: 'hide' | 'show') {
     .filter((file) => file.isNotesManagerFile);
 
   for (const file of notesManagerFiles) {
-    const oldName = file.name;
-    const newName = oldName.substring(0, oldName.length - typedThis.settings.file_sufix.length);
     const textContentElement = file.fileElement.getElementsByTagName('div')[0];
+    const oldName = file.name;
+    styleFile(typedThis, oldName, textContentElement, mode);
+  }
+}
 
-    if (mode === 'hide') {
-      textContentElement.textContent = newName;
-      textContentElement.setAttribute('class', CONFIGS.css_classes.notes_manager_file);
-    } else {
-      textContentElement.textContent = oldName;
-      textContentElement.removeClass(CONFIGS.css_classes.notes_manager_file);
-    }
+export function styleFile(typedThis: NotesManager, oldName: string, element: HTMLDivElement, mode: 'hide' | 'show') {
+  const newName = oldName.substring(0, oldName.length - typedThis.settings.file_sufix.length);
+  if (mode === 'hide') {
+    element.textContent = newName;
+    element.setAttribute('class', CONFIGS.css_classes.notes_manager_file);
+  } else {
+    element.textContent = oldName;
+    element.removeClass(CONFIGS.css_classes.notes_manager_file);
   }
 }
