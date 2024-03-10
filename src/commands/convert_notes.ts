@@ -1,6 +1,6 @@
 import { Notice, TFile } from 'obsidian';
 
-import { ERRORS } from '../consts';
+import { CONFIGS, ERRORS } from '../consts';
 import NotesManager from '../main';
 import { FILE_TYPE_ENUM, NOTE_TYPE_ENUM, TFileType, checkFileExistence, getNoteType } from '../utils/obsidian_utils';
 import { OneLevelNote, TOneLevelNoteConfigs } from '../utils/one_level_note_utils';
@@ -38,7 +38,7 @@ async function convertNoteToX({ file, content, fileType, typedThis, destinationE
     const obsidianFile = typedThis.app.vault.getFileByPath(file.path)!;
     await typedThis.app.vault.modify(obsidianFile, parsedNewContent);
     await typedThis.app.vault.rename(obsidianFile, destinationFile);
-    const fileElement = document.querySelector(`.nav-file-title[data-path="${obsidianFile.path}"] > div`)! as HTMLDivElement;
+    const fileElement = document.querySelector(`.${CONFIGS.obisidan_classes.file_class_name}[${CONFIGS.obisidan_classes.file_path_attribute}="${obsidianFile.path}"] > div`)! as HTMLDivElement;
     styleFile(typedThis, file.basename, fileElement, typedThis.settings.hide_file_sufix ? 'hide' : 'show');
   };
 

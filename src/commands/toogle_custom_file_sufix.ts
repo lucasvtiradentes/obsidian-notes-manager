@@ -4,7 +4,7 @@ import NotesManager from '../main';
 export function toogleCustomFileSufix(mode: 'hide' | 'show') {
   const typedThis = this as NotesManager;
 
-  const files = Array.from(document.querySelectorAll('.nav-file-title'));
+  const files = Array.from(document.querySelectorAll(`.${CONFIGS.obisidan_classes.file_class_name}`));
   const notesManagerFiles = files
     .map((fileElement) => {
       const dataPath = fileElement.getAttribute('data-path')!;

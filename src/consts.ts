@@ -8,7 +8,11 @@ export const CONFIGS = {
     title: 'Sample Plugin',
     class_name: 'my-plugin-ribbon-class'
   },
-  css_classes: constArrayToEnumObject(['notes_manager_file', 'settings_section', 'settings_section_title'])
+  css_classes: constArrayToEnumObject(['notes_manager_file', 'settings_section', 'settings_section_title']),
+  obisidan_classes: {
+    file_class_name: 'nav-file-title',
+    file_path_attribute: 'data-path'
+  }
 } as const;
 
 export const ERRORS = {

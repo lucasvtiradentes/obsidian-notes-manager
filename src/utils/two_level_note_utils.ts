@@ -111,7 +111,7 @@ export class TwoLevelNote {
       return markdown;
     })();
 
-    return content;
+    return `\n${content}\n`;
   }
 
   toMarkdown() {

@@ -10,8 +10,6 @@ export function generateVaultToc() {
     .map((item) => ({ name: item.name, path: item.path, is_file: item.name.includes('.'), level: item.path.split('/').length }));
   const parsedFiles = filesAndFolders;
 
-  console.log(parsedFiles, sortFilesAndDirectories([...parsedFiles]));
-
   const parsedResult = parsedFiles
     .map((item) => ({ ...item, name: item.name }))
     .map((item) => ({ ...item, level: item.name.split('/').length }))
@@ -23,8 +21,6 @@ export function generateVaultToc() {
   for (const [key, value] of tocContent.entries()) {
     content = addSectionToContent(content, `${'#'.repeat(value.level)} ${key} - ${value.title}`, '\ncontent\n');
   }
-
-  console.log(content);
 }
 
 type TFileData = {

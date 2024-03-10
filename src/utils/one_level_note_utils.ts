@@ -83,7 +83,7 @@ export class OneLevelNote {
       return markdown;
     })();
 
-    return content;
+    return `\n${content}\n`;
   }
 
   toMarkdown() {
