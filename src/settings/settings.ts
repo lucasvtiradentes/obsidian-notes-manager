@@ -80,7 +80,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     const settings_section01 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
     settings_section01.createEl('div', { text: 'General configs', cls: CONFIGS.css_classes.settings_section_title });
 
-    new Setting(containerEl).setName('Use file sufix').addToggle((toggle) =>
+    new Setting(containerEl).setName('Use custom file sufix').addToggle((toggle) =>
       toggle.setValue(settings.use_file_sufix).onChange(async (value) => {
         settings.use_file_sufix = value;
         await this.plugin.saveSettings();
@@ -95,7 +95,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     );
 
     new Setting(containerEl)
-      .setName('Show file Badge')
+      .setName('Show custom file badge')
       .setClass(elementClasses.show_file_badge_section)
       .addToggle((toggle) =>
         toggle.setValue(settings.show_file_badge).onChange(async (value) => {
@@ -110,7 +110,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
       );
 
     new Setting(containerEl)
-      .setName('Show file sufix')
+      .setName('Show custom file sufix')
       .setClass(elementClasses.show_file_sufix_section)
       .addToggle((toggle) =>
         toggle.setValue(settings.show_file_sufix).onChange(async (value) => {
@@ -121,7 +121,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
       );
 
     new Setting(containerEl)
-      .setName('File sufix')
+      .setName('Custom file sufix')
       .setClass(elementClasses.file_sufix_section)
       .addText((text) =>
         text

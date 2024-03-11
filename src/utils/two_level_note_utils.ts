@@ -107,7 +107,7 @@ export class TwoLevelNote {
           markdown += `    <!-- <td>${item[this.settings.two_level_note_second_column_name]}</td> -->\n`;
         }
 
-        markdown += `    <td><a href="${item.link}">${item.title}</a></td>\n`;
+        markdown += `    <td><a href="${item[this.settings.two_level_note_third_column_name]}">${item.title}</a></td>\n`;
         markdown += `  </tr>\n`;
       }
 
@@ -136,7 +136,7 @@ export class TwoLevelNote {
           const [topic, topicLinks] = groupedEntries[x];
           contentArr.push('## ' + topic, '');
           for (const linkInfo of topicLinks) {
-            contentArr.push(`- [${linkInfo.title}](${linkInfo.link})`);
+            contentArr.push(`- [${linkInfo.title}](${linkInfo[this.settings.two_level_note_third_column_name]})`);
           }
 
           if (x !== groupedEntries.length - 1) {
@@ -162,7 +162,7 @@ export class TwoLevelNote {
           const [topic, topicLinks] = groupedEntries[x];
           contentArr.push('## ' + topic, '');
           for (const linkInfo of topicLinks) {
-            contentArr.push(`- [${linkInfo.title}](${linkInfo.link})`);
+            contentArr.push(`- [${linkInfo.title}](${linkInfo[this.settings.two_level_note_third_column_name]})`);
           }
 
           if (x !== groupedEntries.length - 1) {

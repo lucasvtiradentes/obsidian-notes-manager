@@ -20,6 +20,7 @@ export class OneLevelNote {
     } else if (this.configs.type === FILE_TYPE_ENUM.MARKDOWN) {
       const typedContent = this.configs.content;
       const toc = generateTOC(typedContent);
+
       const linksPerSection = Array.from(toc.keys()).map((index) => {
         const indexInfo = toc.get(index)!;
         const sectionContent = getSectionContentByIndex(typedContent, index);
@@ -76,7 +77,7 @@ export class OneLevelNote {
           markdown += `    <!-- <td>${item[this.settings.one_level_note_first_column_name]}</td> -->\n`;
         }
 
-        markdown += `    <td><a href="${item.link}">${item.title}</a></td>\n`;
+        markdown += `    <td><a href="${item[this.settings.one_level_note_second_column_name]}">${item.title}</a></td>\n`;
         markdown += `  </tr>\n`;
       }
 
@@ -98,7 +99,7 @@ export class OneLevelNote {
       for (const [group, items] of Object.entries(groupItems)) {
         contentArr.push('# ' + group, '');
         for (const linkItem of items) {
-          contentArr.push(`- [${linkItem.title}](${linkItem.link})`);
+          contentArr.push(`- [${linkItem.title}](${linkItem[this.settings.one_level_note_second_column_name]})`);
         }
         contentArr.push('');
       }
@@ -111,7 +112,7 @@ export class OneLevelNote {
       for (const [group, items] of Object.entries(groupItems)) {
         contentArr.push('# ' + group, '');
         for (const linkItem of items) {
-          contentArr.push(`- [${linkItem.title}](${linkItem.link})`);
+          contentArr.push(`- [${linkItem.title}](${linkItem[this.settings.one_level_note_second_column_name]})`);
         }
         contentArr.push('');
       }
