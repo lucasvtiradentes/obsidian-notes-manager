@@ -1,6 +1,6 @@
 {
   "name": "obsidian-notes-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "📚 convert obsidian notes into json and table.",
   "main": "main.js",
   "license": "MIT",
