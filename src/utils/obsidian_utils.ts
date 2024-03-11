@@ -4,10 +4,10 @@ import { TAbstractFile } from 'obsidian';
 import { FILE_EXTENSION_ENUM } from '../consts';
 import { arrayToEnumObject } from './array_utils';
 import { generateTOC, markdownTableToJson } from './markdown_utils';
+import { TUnionFromObjectEnum } from './type_utils';
 
-const FILE_TYPE = ['JSON', 'TABLE', 'MARKDOWN', '_'] as const;
-export const FILE_TYPE_ENUM = arrayToEnumObject(FILE_TYPE);
-export type TFileType = (typeof FILE_TYPE)[number];
+export const FILE_TYPE_ENUM = arrayToEnumObject(['JSON', 'TABLE', 'MARKDOWN', '_']);
+export type TFileType = TUnionFromObjectEnum<typeof FILE_TYPE_ENUM>;
 
 export function getFileType(content: string, file: TFile): TFileType {
   const extension = file.extension;
@@ -21,9 +21,8 @@ export function getFileType(content: string, file: TFile): TFileType {
   return FILE_TYPE_ENUM._;
 }
 
-const NOTE_TYPE = ['ONE_LEVEL', 'TWO_LEVEL', '_'] as const;
-export const NOTE_TYPE_ENUM = arrayToEnumObject(NOTE_TYPE);
-export type TNoteType = (typeof NOTE_TYPE)[number];
+export const NOTE_TYPE_ENUM = arrayToEnumObject(['ONE_LEVEL', 'TWO_LEVEL', '_']);
+export type TNoteType = TUnionFromObjectEnum<typeof NOTE_TYPE_ENUM>;
 
 export function getNoteType(content: string, fileType: TFileType): TNoteType {
   let noteType: TNoteType = NOTE_TYPE_ENUM._;
@@ -55,20 +54,3 @@ export function getCurrentEditedNoteContent(obsidianPlugin: Plugin) {
   const text = activeEditor.editor!.getDoc().getValue();
   return text;
 }
-
-export async function getCurrentActiveFileContent(obsidianPlugin: Plugin) {
-  const noteFile = obsidianPlugin.app.workspace.getActiveFile()!;
-  const noteFileContent = await obsidianPlugin.app.vault.read(noteFile);
-  return noteFileContent;
-}
-
-// export async function updateCurrentNoteExtension(props: { typedThis: Plugin; newExtension: string }) {
-//   const file = props.typedThis.app.workspace.getActiveFile()!;
-//   const newPath = file.path.replace(file.extension, props.newExtension);
-//   await props.typedThis.app.vault.rename(file, newPath);
-// }
-
-// export function updateCurrentNoteContent(props: { typedThis: Plugin; newContent: string }) {
-//   const activeEditor = props.typedThis.app.workspace.activeEditor!;
-//   activeEditor.editor?.setValue(props.newContent);
-// }

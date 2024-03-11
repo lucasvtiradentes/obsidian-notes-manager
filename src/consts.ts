@@ -1,11 +1,12 @@
 import { DEFAULT_SETTINGS } from './settings/settings';
 import { arrayToEnumObject } from './utils/array_utils';
+import { TUnionFromObjectEnum } from './utils/type_utils';
 
 export const VISIBILITY_ENUM = arrayToEnumObject(['show', 'hide']);
-export type TVisibility = (typeof VISIBILITY_ENUM)[keyof typeof VISIBILITY_ENUM];
+export type TVisibility = TUnionFromObjectEnum<typeof VISIBILITY_ENUM>;
 
 export const FILE_EXTENSION_ENUM = arrayToEnumObject(['json', 'md']);
-export type TFileExtension = (typeof FILE_EXTENSION_ENUM)[keyof typeof FILE_EXTENSION_ENUM];
+export type TFileExtension = TUnionFromObjectEnum<typeof FILE_EXTENSION_ENUM>;
 
 export const CONFIGS = {
   settings: DEFAULT_SETTINGS,
