@@ -1,10 +1,11 @@
 import { TPluginSettings } from '../settings/settings';
 import { groupObjectArrayByKey, mergeArraysOfArrays } from './array_utils';
 import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentByIndex, markdownTableToJson } from './markdown_utils';
-import { TLevelNoteConfigs, TLinkInfo } from './note_utils';
+import { TLevelNoteConfigs } from './note_utils';
 import { FILE_TYPE_ENUM } from './obsidian_utils';
 
-export type TTwoLevelNote = TLinkInfo;
+type TDynamicTwoLevelNote<A extends string, B extends string, C extends string> = { [K in A | B | C]: string } & { title: string };
+export type TTwoLevelNote = TDynamicTwoLevelNote<TPluginSettings['two_level_note_first_column_name'], TPluginSettings['two_level_note_second_column_name'], TPluginSettings['two_level_note_third_column_name']>;
 export type TTwoLevelNoteConfigs = TLevelNoteConfigs<TTwoLevelNote>;
 
 export class TwoLevelNote {
@@ -20,7 +21,7 @@ export class TwoLevelNote {
       return {
         section: indexInfo.title,
         level: indexInfo.level,
-        links: extractMarkdownLinks(getSectionContentByIndex(content, index))
+        links: extractMarkdownLinks(getSectionContentByIndex(content, index), this.settings.two_level_note_third_column_name)
       };
     });
 
@@ -36,7 +37,11 @@ export class TwoLevelNote {
       const grouped = linksPerSection.slice(currentIndex, nextIndex);
 
       const theme = grouped.find((item) => item.level === 1)!.section;
-      const items: TTwoLevelNote[] = mergeArraysOfArrays(grouped.filter((item) => item.level !== 1).map((item) => item.links.map((it) => ({ theme: theme, topic: item.section, ...it }))));
+      const items: TTwoLevelNote[] = mergeArraysOfArrays(
+        grouped
+          .filter((item) => item.level !== 1)
+          .map((item) => item.links.map((it) => ({ [this.settings.two_level_note_first_column_name]: theme, [this.settings.two_level_note_second_column_name]: item.section, [this.settings.two_level_note_third_column_name]: it[this.settings.two_level_note_third_column_name], title: it.title })))
+      );
       linksGroupedByTheme.push(items);
     }
 
@@ -52,13 +57,12 @@ export class TwoLevelNote {
       return finalContent;
     } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
       const jsonData = markdownTableToJson({ mdContent: this.configs.content });
-      const [themeKey, topicKey, linkKey] = Object.keys(jsonData[0]);
       const result: TTwoLevelNote[] = jsonData.map((item) => {
-        const { label, link } = extractLinkInfo(item[linkKey]);
+        const { label, link } = extractLinkInfo(item[this.settings.two_level_note_third_column_name.toUpperCase()]);
         return {
-          theme: item[themeKey],
-          topic: item[topicKey],
-          link: link,
+          [this.settings.two_level_note_first_column_name]: item[this.settings.two_level_note_first_column_name.toUpperCase()],
+          [this.settings.two_level_note_second_column_name]: item[this.settings.two_level_note_second_column_name.toUpperCase()],
+          [this.settings.two_level_note_third_column_name]: link,
           title: label
         };
       });
@@ -75,32 +79,32 @@ export class TwoLevelNote {
       const verticalAlignmentStyle = `style="vertical-align: middle;"`;
       let markdown = '<table>\n';
       markdown += '  <tr>\n';
-      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_first_column_name}</th>\n`;
-      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_second_column_name}</th>\n`;
-      markdown += `    <th>${this.settings.two_level_note_third_column_name}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_first_column_name.toUpperCase()}</th>\n`;
+      markdown += `    <th ${verticalAlignmentStyle}>${this.settings.two_level_note_second_column_name.toUpperCase()}</th>\n`;
+      markdown += `    <th>${this.settings.two_level_note_third_column_name.toUpperCase()}</th>\n`;
       markdown += '  </tr>\n';
 
       let currentTheme: string = '';
       let currentTopic: string = '';
 
       for (const item of jsonData) {
-        if (item.theme !== currentTheme) {
-          const countRows = jsonData.filter((it) => it.theme === item.theme).length;
+        if (item[this.settings.two_level_note_first_column_name] !== currentTheme) {
+          const countRows = jsonData.filter((it) => it[this.settings.two_level_note_first_column_name] === item[this.settings.two_level_note_first_column_name]).length;
           markdown += `  <tr>\n`;
-          markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item.theme}</td>\n`;
-          currentTheme = item.theme;
+          markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item[this.settings.two_level_note_first_column_name]}</td>\n`;
+          currentTheme = item[this.settings.two_level_note_first_column_name];
           currentTopic = '';
         } else {
           markdown += `  <tr>\n`;
-          markdown += `    <!-- <td>${item.theme}</td> -->\n`;
+          markdown += `    <!-- <td>${item[this.settings.two_level_note_first_column_name]}</td> -->\n`;
         }
 
-        if (item.topic !== currentTopic) {
-          const countRows = jsonData.filter((it) => it.theme === item.theme && it.topic === item.topic).length;
-          markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item.topic}</td>\n`;
-          currentTopic = item.topic;
+        if (item[this.settings.two_level_note_second_column_name] !== currentTopic) {
+          const countRows = jsonData.filter((it) => it[this.settings.two_level_note_first_column_name] === item[this.settings.two_level_note_first_column_name] && it[this.settings.two_level_note_second_column_name] === item[this.settings.two_level_note_second_column_name]).length;
+          markdown += `    <td rowspan="${countRows}" ${verticalAlignmentStyle}>${item[this.settings.two_level_note_second_column_name]}</td>\n`;
+          currentTopic = item[this.settings.two_level_note_second_column_name];
         } else {
-          markdown += `    <!-- <td>${item.topic}</td> -->\n`;
+          markdown += `    <!-- <td>${item[this.settings.two_level_note_second_column_name]}</td> -->\n`;
         }
 
         markdown += `    <td><a href="${item.link}">${item.title}</a></td>\n`;
@@ -119,13 +123,13 @@ export class TwoLevelNote {
       return this.configs.content;
     } else if (this.configs.type === FILE_TYPE_ENUM.TABLE) {
       const jsonData = this.toJson();
-      const linksGroupedByTheme = groupObjectArrayByKey(jsonData, 'theme');
+      const linksGroupedByTheme = groupObjectArrayByKey(jsonData, this.settings.two_level_note_first_column_name);
 
       const contentArr: string[] = [];
 
       for (const [theme, themeLinks] of Object.entries(linksGroupedByTheme)) {
         contentArr.push('# ' + theme, '');
-        const linksGroupedByTopic = groupObjectArrayByKey(themeLinks, 'topic');
+        const linksGroupedByTopic = groupObjectArrayByKey(themeLinks, this.settings.two_level_note_second_column_name);
         const groupedEntries = Object.entries(linksGroupedByTopic);
 
         for (let x = 0; x < groupedEntries.length; x++) {
@@ -145,13 +149,13 @@ export class TwoLevelNote {
 
       return contentArr.join('\n');
     } else if (this.configs.type === FILE_TYPE_ENUM.JSON) {
-      const linksGroupedByTheme = groupObjectArrayByKey(this.configs.content, 'theme');
+      const linksGroupedByTheme = groupObjectArrayByKey(this.configs.content, this.settings.two_level_note_first_column_name);
 
       const contentArr: string[] = [];
 
       for (const [theme, themeLinks] of Object.entries(linksGroupedByTheme)) {
         contentArr.push('# ' + theme, '');
-        const linksGroupedByTopic = groupObjectArrayByKey(themeLinks, 'topic');
+        const linksGroupedByTopic = groupObjectArrayByKey(themeLinks, this.settings.two_level_note_second_column_name);
         const groupedEntries = Object.entries(linksGroupedByTopic);
 
         for (let x = 0; x < groupedEntries.length; x++) {

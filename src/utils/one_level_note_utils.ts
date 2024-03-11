@@ -31,7 +31,7 @@ export class OneLevelNote {
       });
 
       const reducedLinks = linksPerSection.reduce((acc, section) => {
-        const parsedLinks = section.links.map((link) => ({ title: link.title, [this.settings.one_level_note_second_column_name]: link.link, [this.settings.one_level_note_first_column_name]: section.section }));
+        const parsedLinks = section.links.map((link) => ({ title: link.title, [this.settings.one_level_note_second_column_name]: link[this.settings.one_level_note_second_column_name], [this.settings.one_level_note_first_column_name]: section.section }));
         return [...acc, ...parsedLinks];
       }, [] as TOneLevelNote[]);
 
