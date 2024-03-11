@@ -1,6 +1,6 @@
 {
   "id": "obsidian-notes-manager",
-  "name": "obsidian notes manager",
+  "name": "notes manager",
   "version": "1.0.0",
   "minAppVersion": "0.15.0",
   "description": "📚 convert obsidian notes into json and table.",
