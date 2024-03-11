@@ -5,7 +5,7 @@ import { addFileCommandsToObsidian } from './commands/contexts/file_commands';
 import { addKeybindedCommandsToObsidian } from './commands/contexts/keybinded_commands';
 import { addPalletCommandsToObsidian } from './commands/contexts/pallet_commands';
 import { styleAllFilesBadges, styleAllFilesExtensions } from './commands/toogle_custom_file_sufix';
-import { CONFIGS } from './consts';
+import { CONFIGS, VISIBILITY_ENUM } from './consts';
 import { addRibbonToObsidian } from './ribbon/ribbon';
 import { TPluginSettings, addSettingsToObsidian } from './settings/settings';
 
@@ -25,20 +25,50 @@ export default class NotesManager extends Plugin {
 
     this.registerExtensions(['json'], 'markdown');
 
-    window.setTimeout(() => {
-      if (!this.settings.use_file_sufix) return;
+    this.runWhenObsidianLoadVaultContent(() => {
+      this.updateFilesStyles();
 
-      if (!this.settings.show_file_sufix) {
-        styleAllFilesExtensions.call(this, 'hide');
-      }
+      const styledFolderAttribute = 'nm-styled';
+      const allFolders = Array.from(document.querySelectorAll(`.${CONFIGS.obisidan_classes.folder_item}.${CONFIGS.obisidan_classes.collapsed_folder_item}`));
 
-      if (this.settings.show_file_badge) {
-        styleAllFilesBadges.call(this, 'show');
+      for (const folderEl of allFolders) {
+        folderEl.addEventListener('click', () => {
+          const wasStyled = folderEl.getAttribute(styledFolderAttribute);
+          if (!wasStyled) {
+            this.updateFilesStyles();
+            folderEl.setAttribute(styledFolderAttribute, 'true');
+          }
+        });
       }
-    }, 2 * 1000);
+    });
   }
 
   onunload() {}
+
+  updateFilesStyles() {
+    if (!this.settings.use_file_sufix) return;
+
+    if (!this.settings.show_file_sufix) {
+      styleAllFilesExtensions.call(this, VISIBILITY_ENUM.hide);
+    }
+
+    if (this.settings.show_file_badge) {
+      styleAllFilesBadges.call(this, VISIBILITY_ENUM.show);
+    }
+  }
+
+  runWhenObsidianLoadVaultContent(callBack: () => void) {
+    const files = document.querySelectorAll(`.${CONFIGS.obisidan_classes.file_item}`);
+    const folders = document.querySelectorAll(`.${CONFIGS.obisidan_classes.folder_item}`);
+
+    if (files.length > 0 && folders.length > 0) {
+      callBack();
+    } else {
+      setTimeout(() => {
+        this.runWhenObsidianLoadVaultContent(callBack);
+      }, 300);
+    }
+  }
 
   async loadSettings() {
     this.settings = Object.assign({}, CONFIGS.settings, await this.loadData());

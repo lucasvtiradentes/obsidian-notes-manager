@@ -1,9 +1,9 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 import { styleAllFilesBadges, styleAllFilesExtensions } from '../commands/toogle_custom_file_sufix';
-import { CONFIGS } from '../consts';
+import { CONFIGS, TVisibility, VISIBILITY_ENUM } from '../consts';
 import NotesManager from '../main';
-import { constArrayToEnumObject } from '../utils/array_utils';
+import { arrayToEnumObject } from '../utils/array_utils';
 
 export type TPluginSettings = {
   use_file_sufix: boolean;
@@ -51,45 +51,45 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     const { containerEl } = this;
     containerEl.empty();
     const settings = this.plugin.settings;
-    const elementClasses = constArrayToEnumObject(['show_file_badge_section', 'file_sufix_section', 'show_file_sufix_section']);
+    const elementClasses = arrayToEnumObject(['show_file_badge_section', 'file_sufix_section', 'show_file_sufix_section']);
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    const modifyDependentSettings = (mode: 'show' | 'hide') => {
+    const modifyDependentSettings = (mode: TVisibility) => {
       for (const item of Object.values(elementClasses)) {
         const element = containerEl.getElementsByClassName(item)[0];
 
-        if (mode === 'show') {
-          if (element.classList.contains(CONFIGS.css_classes.settings_section_hided)) {
-            element.classList.remove(CONFIGS.css_classes.settings_section_hided);
+        if (mode === VISIBILITY_ENUM.show) {
+          if (element.classList.contains(CONFIGS.css_classes.nm_settings_section_hided)) {
+            element.classList.remove(CONFIGS.css_classes.nm_settings_section_hided);
           }
         } else {
-          element.classList.add(CONFIGS.css_classes.settings_section_hided);
+          element.classList.add(CONFIGS.css_classes.nm_settings_section_hided);
         }
       }
     };
 
     const shouldHideFileSufix = (value: boolean) => {
       if (value) {
-        styleAllFilesExtensions.call(this.plugin, 'show');
+        styleAllFilesExtensions.call(this.plugin, VISIBILITY_ENUM.show);
       } else {
-        styleAllFilesExtensions.call(this.plugin, 'hide');
+        styleAllFilesExtensions.call(this.plugin, VISIBILITY_ENUM.hide);
       }
     };
 
-    const settings_section01 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
-    settings_section01.createEl('div', { text: 'General configs', cls: CONFIGS.css_classes.settings_section_title });
+    const settings_section01 = containerEl.createEl('div', { cls: CONFIGS.css_classes.nm_settings_section });
+    settings_section01.createEl('div', { text: 'General configs', cls: CONFIGS.css_classes.nm_settings_section_title });
 
     new Setting(containerEl).setName('Use custom file sufix').addToggle((toggle) =>
       toggle.setValue(settings.use_file_sufix).onChange(async (value) => {
         settings.use_file_sufix = value;
         await this.plugin.saveSettings();
         if (value) {
-          modifyDependentSettings('show');
+          modifyDependentSettings(VISIBILITY_ENUM.show);
           shouldHideFileSufix(settings.show_file_sufix);
         } else {
-          modifyDependentSettings('hide');
-          styleAllFilesExtensions.call(this.plugin, 'show');
+          modifyDependentSettings(VISIBILITY_ENUM.hide);
+          styleAllFilesExtensions.call(this.plugin, VISIBILITY_ENUM.show);
         }
       })
     );
@@ -102,9 +102,9 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
           settings.show_file_badge = value;
           await this.plugin.saveSettings();
           if (value) {
-            styleAllFilesBadges.call(this.plugin, 'show');
+            styleAllFilesBadges.call(this.plugin, VISIBILITY_ENUM.show);
           } else {
-            styleAllFilesBadges.call(this.plugin, 'hide');
+            styleAllFilesBadges.call(this.plugin, VISIBILITY_ENUM.hide);
           }
         })
       );
@@ -139,15 +139,15 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
       );
 
     if (settings.use_file_sufix) {
-      modifyDependentSettings('show');
+      modifyDependentSettings(VISIBILITY_ENUM.show);
     } else {
-      modifyDependentSettings('hide');
+      modifyDependentSettings(VISIBILITY_ENUM.hide);
     }
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    const settings_section02 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
-    settings_section02.createEl('div', { text: 'One level notes configs', cls: CONFIGS.css_classes.settings_section_title });
+    const settings_section02 = containerEl.createEl('div', { cls: CONFIGS.css_classes.nm_settings_section });
+    settings_section02.createEl('div', { text: 'One level notes configs', cls: CONFIGS.css_classes.nm_settings_section_title });
 
     new Setting(containerEl).setName('First column name').addText((text) =>
       text
@@ -171,8 +171,8 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    const settings_section03 = containerEl.createEl('div', { cls: CONFIGS.css_classes.settings_section });
-    settings_section03.createEl('div', { text: 'Two level notes configs', cls: CONFIGS.css_classes.settings_section_title });
+    const settings_section03 = containerEl.createEl('div', { cls: CONFIGS.css_classes.nm_settings_section });
+    settings_section03.createEl('div', { text: 'Two level notes configs', cls: CONFIGS.css_classes.nm_settings_section_title });
 
     new Setting(containerEl).setName('First column name').addText((text) =>
       text

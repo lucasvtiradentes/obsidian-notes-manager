@@ -1,6 +1,6 @@
 import { Notice, TFile } from 'obsidian';
 
-import { CONFIGS, ERRORS } from '../consts';
+import { CONFIGS, ERRORS, FILE_EXTENSION_ENUM, TFileExtension, VISIBILITY_ENUM } from '../consts';
 import NotesManager from '../main';
 import { FILE_TYPE_ENUM, NOTE_TYPE_ENUM, TFileType, checkFileExistence, getNoteType } from '../utils/obsidian_utils';
 import { OneLevelNote, TOneLevelNoteConfigs } from '../utils/one_level_note_utils';
@@ -17,7 +17,7 @@ export type TCommand = {
   action: (typedThis: TCommandAction) => Promise<void> | void;
 };
 
-async function convertNoteToX({ file, content, fileType, typedThis, destinationExtension, to }: TCommandAction & { destinationExtension: string; to: 'toTable' | 'toMarkdown' | 'toJson' }) {
+async function convertNoteToX({ file, content, fileType, typedThis, destinationExtension, to }: TCommandAction & { destinationExtension: TFileExtension; to: 'toTable' | 'toMarkdown' | 'toJson' }) {
   if (fileType === FILE_TYPE_ENUM._) return;
 
   const destinationFile = (() => {
@@ -38,11 +38,11 @@ async function convertNoteToX({ file, content, fileType, typedThis, destinationE
     const obsidianFile = typedThis.app.vault.getFileByPath(file.path)!;
     await typedThis.app.vault.modify(obsidianFile, parsedNewContent);
     await typedThis.app.vault.rename(obsidianFile, destinationFile);
-    const fileElement = document.querySelector(`.${CONFIGS.obisidan_classes.file_class_name}[${CONFIGS.obisidan_classes.file_path_attribute}="${obsidianFile.path}"] > div`)! as HTMLDivElement;
+    const fileElement = document.querySelector(`.${CONFIGS.obisidan_classes.file_title_item}[${CONFIGS.obisidan_classes.file_path_attribute}="${obsidianFile.path}"] > div`)! as HTMLDivElement;
 
     if (typedThis.settings.use_file_sufix) {
-      styleFileExtension(typedThis, file.basename, fileElement, typedThis.settings.show_file_sufix ? 'show' : 'hide');
-      styleFileBadge(fileElement, typedThis.settings.show_file_badge ? 'show' : 'hide');
+      styleFileExtension(typedThis, file.basename, fileElement, typedThis.settings.show_file_sufix ? VISIBILITY_ENUM.show : VISIBILITY_ENUM.hide);
+      styleFileBadge(fileElement, typedThis.settings.show_file_badge ? VISIBILITY_ENUM.show : VISIBILITY_ENUM.hide);
     }
   };
 
@@ -92,13 +92,13 @@ async function convertNoteToX({ file, content, fileType, typedThis, destinationE
 }
 
 export function convertNoteToTable(commandProps: TCommandAction) {
-  convertNoteToX({ ...commandProps, destinationExtension: 'md', to: 'toTable' });
+  convertNoteToX({ ...commandProps, destinationExtension: FILE_EXTENSION_ENUM.md, to: 'toTable' });
 }
 
 export function convertNoteToMarkdown(commandProps: TCommandAction) {
-  convertNoteToX({ ...commandProps, destinationExtension: 'md', to: 'toMarkdown' });
+  convertNoteToX({ ...commandProps, destinationExtension: FILE_EXTENSION_ENUM.md, to: 'toMarkdown' });
 }
 
 export function convertNoteToJSON(commandProps: TCommandAction) {
-  convertNoteToX({ ...commandProps, destinationExtension: 'json', to: 'toJson' });
+  convertNoteToX({ ...commandProps, destinationExtension: FILE_EXTENSION_ENUM.json, to: 'toJson' });
 }

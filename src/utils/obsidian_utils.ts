@@ -1,18 +1,19 @@
 import { Plugin, TFile } from 'obsidian';
 import { TAbstractFile } from 'obsidian';
 
-import { constArrayToEnumObject } from './array_utils';
+import { FILE_EXTENSION_ENUM } from '../consts';
+import { arrayToEnumObject } from './array_utils';
 import { generateTOC, markdownTableToJson } from './markdown_utils';
 
 const FILE_TYPE = ['JSON', 'TABLE', 'MARKDOWN', '_'] as const;
-export const FILE_TYPE_ENUM = constArrayToEnumObject(FILE_TYPE);
+export const FILE_TYPE_ENUM = arrayToEnumObject(FILE_TYPE);
 export type TFileType = (typeof FILE_TYPE)[number];
 
 export function getFileType(content: string, file: TFile): TFileType {
   const extension = file.extension;
 
-  if (extension === 'json') return FILE_TYPE_ENUM.JSON;
-  if (extension === 'md') {
+  if (extension === FILE_EXTENSION_ENUM.json) return FILE_TYPE_ENUM.JSON;
+  if (extension === FILE_EXTENSION_ENUM.md) {
     if (content.includes('<table>') && content.includes('</table>')) return FILE_TYPE_ENUM.TABLE;
     return FILE_TYPE_ENUM.MARKDOWN;
   }
@@ -21,7 +22,7 @@ export function getFileType(content: string, file: TFile): TFileType {
 }
 
 const NOTE_TYPE = ['ONE_LEVEL', 'TWO_LEVEL', '_'] as const;
-export const NOTE_TYPE_ENUM = constArrayToEnumObject(NOTE_TYPE);
+export const NOTE_TYPE_ENUM = arrayToEnumObject(NOTE_TYPE);
 export type TNoteType = (typeof NOTE_TYPE)[number];
 
 export function getNoteType(content: string, fileType: TFileType): TNoteType {

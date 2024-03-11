@@ -1,26 +1,26 @@
 /* SETTINGS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-.settings_section {
+.nm_settings_section {
   border: 1px solid var(--background-modifier-border);
   padding: 10px;
   margin-top: 20px;
 }
 
-.settings_section_title {
+.nm_settings_section_title {
   font-weight: 600;
 }
 
-.settings_section_hided {
+.nm_settings_section_hided {
   display: none;
 }
 
 /* FILES LIST +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-.notes_manager_file {
+.nm_file {
   display: flex;
 }
 
-.notes_manager_file_icon {
+.nm_file_icon {
   margin-left: auto;
   background-color: var(--background-modifier-hover);
   border-radius: var(--radius-s);
