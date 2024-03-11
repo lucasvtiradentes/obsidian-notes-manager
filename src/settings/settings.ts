@@ -22,11 +22,11 @@ export const DEFAULT_SETTINGS: TPluginSettings = {
   show_file_badge: true,
   show_file_sufix: false,
   file_sufix: '.nm',
-  one_level_note_first_column_name: 'THEME',
-  one_level_note_second_column_name: 'LINK',
-  two_level_note_first_column_name: 'THEME',
-  two_level_note_second_column_name: 'TOPIC',
-  two_level_note_third_column_name: 'LINK'
+  one_level_note_first_column_name: 'theme',
+  one_level_note_second_column_name: 'link',
+  two_level_note_first_column_name: 'theme',
+  two_level_note_second_column_name: 'topic',
+  two_level_note_third_column_name: 'link'
 };
 
 interface PluginWithSettings extends Plugin {

@@ -117,12 +117,12 @@ export function extractLinkInfo(linkHTML: string) {
   }
 }
 
-export function extractMarkdownLinks(markdown: string): { title: string; link: string }[] {
+export function extractMarkdownLinks<TLink extends string>(markdown: string, linkColumn: TLink) {
   const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
 
   return [...markdown.matchAll(regex)].map((match) => ({
     title: match[1],
-    link: match[2]
+    [linkColumn]: match[2]
   }));
 }
 
