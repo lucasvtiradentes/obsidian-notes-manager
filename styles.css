@@ -7,7 +7,12 @@
 }
 
 .nm_settings_section_title {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  color: var(--inline-title-color);
   font-weight: 600;
+  border: 0;
 }
 
 .nm_settings_section_hided {
