@@ -1,8 +1,10 @@
 import { Notice, TFile } from 'obsidian';
 
-import { CONFIGS, ERRORS, FILE_EXTENSION_ENUM, TFileExtension, VISIBILITY_ENUM } from '../consts';
+import { CONFIGS } from '../consts/configs';
+import { FILE_TYPE_ENUM, NOTE_TYPE_ENUM, TFileType, FILE_EXTENSION_ENUM, TFileExtension, VISIBILITY_ENUM } from '../consts/enums';
+import { ERRORS } from '../consts/errors';
 import NotesManager from '../main';
-import { FILE_TYPE_ENUM, NOTE_TYPE_ENUM, TFileType, checkFileExistence, getNoteType } from '../utils/obsidian_utils';
+import { checkFileExistence, getNoteType } from '../utils/obsidian_utils';
 import { OneLevelNote, TOneLevelNoteConfigs } from '../utils/one_level_note_utils';
 import { TTwoLevelNoteConfigs, TwoLevelNote } from '../utils/two_level_note_utils';
 import { styleFileBadge, styleFileExtension } from './toogle_custom_file_sufix';

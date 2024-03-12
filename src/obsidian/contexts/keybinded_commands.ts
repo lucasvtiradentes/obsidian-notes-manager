@@ -1,7 +1,7 @@
 import { Plugin } from 'obsidian';
 
-import { generateVaultToc } from '../generate_toc';
-import { styleAllFilesExtensions } from '../toogle_custom_file_sufix';
+import { generateVaultToc } from '../../commands/generate_toc';
+import { styleAllFilesExtensions } from '../../commands/toogle_custom_file_sufix';
 
 export function addKeybindedCommandsToObsidian() {
   const typedThis = this as Plugin;

@@ -11,10 +11,6 @@ export const groupObjectArrayByKey = <T extends object, K extends keyof T>(arr: 
 
 export const mergeArraysOfArrays = <T>(arr: T[][]): T[] => arr.reduce((acc, val) => acc.concat(val), []);
 
-export function arrayToEnumObject<T extends string>(arr: readonly [...T[]]) {
-  const obj = {} as { [K in T]: K };
-  arr.forEach((item) => {
-    obj[item] = item;
-  });
-  return obj;
+export function arrayToObjectEnum<T extends string>(arr: readonly [...T[]]) {
+  return arr.reduce((obj, item) => ((obj[item] = item), obj), {} as { [K in T]: K });
 }

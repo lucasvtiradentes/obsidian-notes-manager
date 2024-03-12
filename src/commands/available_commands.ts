@@ -1,4 +1,4 @@
-import { FILE_TYPE_ENUM, TFileType } from '../utils/obsidian_utils';
+import { FILE_TYPE_ENUM, TFileType } from '../consts/enums';
 import { TCommand, convertNoteToJSON, convertNoteToMarkdown, convertNoteToTable } from './convert_notes';
 
 function isValidNoteType(allowedTypes: TFileType[], fileToCheck: TFileType) {

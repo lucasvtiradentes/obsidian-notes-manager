@@ -1,13 +1,14 @@
 import { Plugin } from 'obsidian';
 
-import { addEditorCommandsToObsidian } from './commands/contexts/editor_commands';
-import { addFileCommandsToObsidian } from './commands/contexts/file_commands';
-import { addKeybindedCommandsToObsidian } from './commands/contexts/keybinded_commands';
-import { addPalletCommandsToObsidian } from './commands/contexts/pallet_commands';
 import { styleAllFilesBadges, styleAllFilesExtensions } from './commands/toogle_custom_file_sufix';
-import { CONFIGS, VISIBILITY_ENUM } from './consts';
-import { addRibbonToObsidian } from './ribbon/ribbon';
-import { TPluginSettings, addSettingsToObsidian } from './settings/settings';
+import { CONFIGS } from './consts/configs';
+import { VISIBILITY_ENUM } from './consts/enums';
+import { addEditorCommandsToObsidian } from './obsidian/contexts/editor_commands';
+import { addFileCommandsToObsidian } from './obsidian/contexts/file_commands';
+import { addKeybindedCommandsToObsidian } from './obsidian/contexts/keybinded_commands';
+import { addPalletCommandsToObsidian } from './obsidian/contexts/pallet_commands';
+import { addRibbonToObsidian } from './obsidian/ribbon';
+import { TPluginSettings, addSettingsToObsidian } from './obsidian/settings';
 
 export default class NotesManager extends Plugin {
   settings: TPluginSettings;
@@ -38,6 +39,7 @@ export default class NotesManager extends Plugin {
             this.updateFilesStyles();
             folderEl.setAttribute(styledFolderAttribute, 'true');
           }
+          // colocar caso ja tenha sido estilizado mas o show_file_sufix ou show_file_badge for true, retirar a estilizacao uma vez
         });
       }
     });

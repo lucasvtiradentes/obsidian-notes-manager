@@ -1,6 +1,6 @@
 import { Notice, Plugin } from 'obsidian';
 
-import { CONFIGS } from '../consts';
+import { CONFIGS } from '../consts/configs';
 
 export function addRibbonToObsidian() {
   const typedThis = this as Plugin;

@@ -1,8 +1,8 @@
-import { TPluginSettings } from '../settings/settings';
+import { FILE_TYPE_ENUM } from '../consts/enums';
+import { TPluginSettings } from '../obsidian/settings';
 import { groupObjectArrayByKey, mergeArraysOfArrays } from './array_utils';
 import { extractLinkInfo, extractMarkdownLinks, generateTOC, getSectionContentByIndex, markdownTableToJson } from './markdown_utils';
 import { TLevelNoteConfigs } from './note_utils';
-import { FILE_TYPE_ENUM } from './obsidian_utils';
 
 type TDynamicTwoLevelNote<A extends string, B extends string, C extends string> = { [K in A | B | C]: string } & { title: string };
 export type TTwoLevelNote = TDynamicTwoLevelNote<TPluginSettings['two_level_note_first_column_name'], TPluginSettings['two_level_note_second_column_name'], TPluginSettings['two_level_note_third_column_name']>;

@@ -1,4 +1,4 @@
-import { FILE_TYPE_ENUM } from './obsidian_utils';
+import { FILE_TYPE_ENUM } from '../consts/enums';
 
 export type TLevelNoteConfigs<TContent> =
   | {

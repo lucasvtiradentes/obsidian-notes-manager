@@ -1,6 +1,6 @@
+import { commandsArr } from '../../commands/available_commands';
 import NotesManager from '../../main';
 import { getFileType } from '../../utils/obsidian_utils';
-import { commandsArr } from '../available_commands';
 
 export function addFileCommandsToObsidian() {
   const typedThis = this as NotesManager;

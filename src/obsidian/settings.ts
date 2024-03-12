@@ -1,9 +1,10 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 import { styleAllFilesBadges, styleAllFilesExtensions } from '../commands/toogle_custom_file_sufix';
-import { CONFIGS, TVisibility, VISIBILITY_ENUM } from '../consts';
+import { CONFIGS } from '../consts/configs';
+import { TVisibility, VISIBILITY_ENUM } from '../consts/enums';
 import NotesManager from '../main';
-import { arrayToEnumObject } from '../utils/array_utils';
+import { arrayToObjectEnum } from '../utils/array_utils';
 
 export type TPluginSettings = {
   use_file_sufix: boolean;
@@ -51,7 +52,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     const { containerEl } = this;
     containerEl.empty();
     const settings = this.plugin.settings;
-    const elementClasses = arrayToEnumObject(['show_file_badge_section', 'file_sufix_section', 'show_file_sufix_section']);
+    const elementClasses = arrayToObjectEnum(['show_file_badge_section', 'file_sufix_section', 'show_file_sufix_section']);
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -78,7 +79,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     };
 
     const settings_section01 = containerEl.createEl('div', { cls: CONFIGS.css_classes.nm_settings_section });
-    settings_section01.createEl('div', { text: 'General configs', cls: CONFIGS.css_classes.nm_settings_section_title });
+    settings_section01.createEl('div', { text: 'General', cls: CONFIGS.css_classes.nm_settings_section_title });
 
     new Setting(containerEl).setName('Use custom file sufix').addToggle((toggle) =>
       toggle.setValue(settings.use_file_sufix).onChange(async (value) => {
@@ -147,7 +148,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     const settings_section02 = containerEl.createEl('div', { cls: CONFIGS.css_classes.nm_settings_section });
-    settings_section02.createEl('div', { text: 'One level notes configs', cls: CONFIGS.css_classes.nm_settings_section_title });
+    settings_section02.createEl('div', { text: 'One level notes', cls: CONFIGS.css_classes.nm_settings_section_title });
 
     new Setting(containerEl).setName('First column name').addText((text) =>
       text
@@ -172,7 +173,7 @@ export class NotesManagerSettings<T extends PluginWithSettings> extends PluginSe
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     const settings_section03 = containerEl.createEl('div', { cls: CONFIGS.css_classes.nm_settings_section });
-    settings_section03.createEl('div', { text: 'Two level notes configs', cls: CONFIGS.css_classes.nm_settings_section_title });
+    settings_section03.createEl('div', { text: 'Two level notes', cls: CONFIGS.css_classes.nm_settings_section_title });
 
     new Setting(containerEl).setName('First column name').addText((text) =>
       text

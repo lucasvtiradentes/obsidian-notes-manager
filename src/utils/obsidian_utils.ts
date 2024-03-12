@@ -1,13 +1,7 @@
-import { Plugin, TFile } from 'obsidian';
-import { TAbstractFile } from 'obsidian';
+import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
-import { FILE_EXTENSION_ENUM } from '../consts';
-import { arrayToEnumObject } from './array_utils';
+import { FILE_EXTENSION_ENUM, FILE_TYPE_ENUM, NOTE_TYPE_ENUM, TFileType, TNoteType } from '../consts/enums';
 import { generateTOC, markdownTableToJson } from './markdown_utils';
-import { TUnionFromObjectEnum } from './type_utils';
-
-export const FILE_TYPE_ENUM = arrayToEnumObject(['JSON', 'TABLE', 'MARKDOWN', '_']);
-export type TFileType = TUnionFromObjectEnum<typeof FILE_TYPE_ENUM>;
 
 export function getFileType(content: string, file: TFile): TFileType {
   const extension = file.extension;
@@ -20,9 +14,6 @@ export function getFileType(content: string, file: TFile): TFileType {
 
   return FILE_TYPE_ENUM._;
 }
-
-export const NOTE_TYPE_ENUM = arrayToEnumObject(['ONE_LEVEL', 'TWO_LEVEL', '_']);
-export type TNoteType = TUnionFromObjectEnum<typeof NOTE_TYPE_ENUM>;
 
 export function getNoteType(content: string, fileType: TFileType): TNoteType {
   let noteType: TNoteType = NOTE_TYPE_ENUM._;

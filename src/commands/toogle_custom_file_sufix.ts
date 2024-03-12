@@ -1,4 +1,5 @@
-import { CONFIGS, TVisibility, VISIBILITY_ENUM } from '../consts';
+import { CONFIGS } from '../consts/configs';
+import { TVisibility, VISIBILITY_ENUM } from '../consts/enums';
 import NotesManager from '../main';
 
 function getAllNotesManagerFiles(typedThis: NotesManager) {
